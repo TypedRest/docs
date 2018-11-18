@@ -1,0 +1,8 @@
+site_name: TypedRest
+site_url: https://typedrest.net/
+repo_url: https://github.com/TypedRest/docs
+
+theme: readthedocs
+markdown_extensions: [def_list]
+extra_css: [style.css]
+extra_javascript: [menu.js]
