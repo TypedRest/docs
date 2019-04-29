@@ -10,19 +10,19 @@ Pretty standard stuff, right? The problem is that all this knowledge currently o
 var client = new HttpClient {BaseAddress = new Uri("http://example.com/")};
 
 var contactsResponse = await client.GetAsync("contacts");
-var contactList = await contactsResponse.Content.ReadAsAsync<List<Contact>>();
+var contactList = await contactsResponse.Content.ReadAsAsync<List<ContactDto>>();
 
 var janeResponse = await client.GetAsync("contacts/jane");
-var jane = await janeResponse.Content.ReadAsAsync<Contact>();
+var jane = await janeResponse.Content.ReadAsAsync<ContactDto>();
 
-await client.PostAsJsonAsync("contacts", new Contact("John"));
+await client.PostAsJsonAsync("contacts", new ContactDto("John"));
 ```
 
 This is where TypedRest comes in. TypedRest is a .NET and Java library for consuming RESTful APIs that behave in a "predictable" way. Rather than applying your knowledge about how a REST collection usually behaves you simply tell the library that this particular endpoint *is* a collection and get a collection-like interface in return.
 
 ```csharp
 var myService = new EntryEndpoint(new Uri("http://example.com/"));
-var contacts = new CollectionEndpoint<Contact>(myService, relativeUri: "contacts");
+var contacts = new CollectionEndpoint<ContactDto>(myService, relativeUri: "./contacts");
 
 var contactList = await contacts.ReadAllAsync();
 var jane = await contacts["jane"].ReadAsync();
@@ -37,7 +37,7 @@ class MyServiceClient : EntryEndpoint
   public MyServiceClient(Uri uri) : base(uri)
   {}
 
-  public ICollectionEndpoint<Contact> Contacts => new CollectionEndpoint<Contact>(this, relativeUri: "contacts");
+  public ICollectionEndpoint<ContactDto> Contacts => new CollectionEndpoint<ContactDto>(this, relativeUri: "./contacts");
 }
 ```
 
@@ -47,7 +47,7 @@ The consuming code could look this:
 var myService = new MyServiceClient(new Uri("http://example.com/"));
 var contactList = await myService.Contacts.ReadAllAsync();
 var jane = await myService.Contacts["jane"].ReadAsync();
-await myService.Contacts.CreateAsync(new Contact("john"));
+await myService.Contacts.CreateAsync(new ContactDto("john"));
 ```
 
 TypedRest is all about nomenclature and patterns. An endpoint describes any resource addressable via an URI.
@@ -55,7 +55,6 @@ TypedRest is all about nomenclature and patterns. An endpoint describes any reso
 - An *entry endpoint* represents the top-level URI of an API. It takes care of shared concerns such as authentication.
 - An *element endpoint* is a singular resource that can be read, modified and deleted.
 - A *collection endpoint* can list and add elements as well as provide element endpoints for individual elements.
-- A *trigger endpoint* represents an RPC-like call to trigger a single action.
 
 There are also a number of more specialized endpoint types such as pagination-aware collections. Each of these endpoint types has one or more corresponding classes in TypedRest. 
 
@@ -63,12 +62,12 @@ The only requirement on the server-side is that at least a part of the underlyin
 
 We consider TypedRest's design to be opinionated yet pragmatic. The path of least resistance is to make your API match the patterns implemented in the built-in classes. These usually align with what is widely considered as "best practice". However:
 
-- We explicitly support some unRESTful concepts such as the RPC-like trigger endpoints mentioned above.
+- We explicitly support some unRESTful concepts such as RPC-like endpoints.
 - HATEOAS-style, link-based navigation is possible but entirely optional.
 - Link information is preferably encoded in HTTP headers instead of response bodies (although the latter is also supported in form of HAL).
 - TypedRest does not use custom MIME types for API versioning, navigation, etc..
 
-Of course, we don't expect our predefined patterns to cover all possible use cases. This where good old "extension through inheritance" comes into play. Lets say our sample API from above also allows us to trigger a phone call to a contact. We need to extend `ElementEndpoint` for individual `Contact` instances to expose this functionality. We also need to replace `CollectionEndpoint` with something that builds instances of our specialized element endpoint rather than using `ElementEndpoint`. Let's get coding!
+Of course, we don't expect our predefined patterns to cover all possible use cases. This where good old "extension through inheritance" comes into play. Let's say our sample API from above also allows us to store notes associated with a contact. We need to extend `ElementEndpoint` for individual `Contact` instances to expose this functionality. We also need to replace `CollectionEndpoint` with something that builds instances of our specialized element endpoint rather than using `ElementEndpoint`. Let's get coding!
 
 ```csharp
 class MyServiceClient : EntryEndpoint
@@ -84,19 +83,16 @@ class MyServiceClient : EntryEndpoint
 class ContactCollectionEndpoint : CollectionEndpointBase<Contact, ContactEndpoint>
 {
   // Hard-coding the relative URI here makes the constructor signature nicer
-  public ContactCollectionEndpoint(IEndpoint referrer) : base(referrer, relativeUri: "contacts")
+  public ContactCollectionEndpoint(IEndpoint referrer) : base(referrer, relativeUri: "./contacts")
   {}
-
-  public override ContactEndpoint this[Uri relativeUri] => new ContactEndpoint(this, relativeUri);
 }
 
-class ContactEndpoint : ElementEndpoint<Contact>
+class ContactEndpoint : ElementEndpoint<ContactDto>
 {
   public ContactEndpoint(IEndpoint referrer, Uri relativeUri) : base(referrer, relativeUri)
   {}
 
-  // ActionEndpoint is a specific type of trigger endpoint that takes no input and provides no output
-  public IActionEndpoint Call => new ActionEndpoint(this, relativeUri: "call");
+  public IElementEndpoint<NoteDto> Notes => new ElementEndpoint<NoteDto>(this, relativeUri: "./notes");
 }
 ```
 
@@ -104,5 +100,5 @@ The consuming code could look this:
 
 ```csharp
 var myService = new MyServiceClient(new Uri("http://example.com/"));
-await myService.Contacts["jane"].Call.TriggerAsync();
+await myService.Contacts["jane"].Notes.SetAsync(new NoteDto("some note"));
 ```
