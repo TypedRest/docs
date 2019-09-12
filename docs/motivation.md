@@ -63,8 +63,8 @@ The only requirement on the server-side is that at least a part of the underlyin
 We consider TypedRest's design to be opinionated yet pragmatic. The path of least resistance is to make your API match the patterns implemented in the built-in classes. These usually align with what is widely considered as "best practice". However:
 
 - We explicitly support some unRESTful concepts such as RPC endpoints.
-- [HATEOAS](linking/hateoas.md)-style, link-based navigation is possible but entirely optional.
-- Link information is preferably encoded in [HTTP Link headers](linking/http-link-header.md) instead of response bodies, although the latter is also supported in form of [HAL](linking/hal.md).
+- HATEOAS-style, link-based navigation is possible but entirely optional.
+- Link information is preferably encoded in HTTP Link headers instead of response bodies, although the latter is also supported in form of HAL.
 - TypedRest does not use custom MIME types for API versioning, navigation, etc..
 
 Of course, we don't expect our predefined patterns to cover all possible use cases. This where good old "extension through inheritance" comes into play. Let's say our sample API from above also allows us to store notes associated with a contact. We need to extend `ElementEndpoint` for individual `Contact` instances to expose this functionality. We also need to replace `CollectionEndpoint` with something that builds instances of our specialized element endpoint rather than using `ElementEndpoint`. Let's get coding!
