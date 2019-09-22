@@ -10,23 +10,23 @@ Pretty standard stuff, right? The problem is that all this knowledge currently o
 var client = new HttpClient {BaseAddress = new Uri("http://example.com/")};
 
 var contactsResponse = await client.GetAsync("contacts");
-var contactList = await contactsResponse.Content.ReadAsAsync<List<ContactDto>>();
+var contactList = await contactsResponse.Content.ReadAsAsync<List<Contact>>();
 
 var janeResponse = await client.GetAsync("contacts/jane");
-var jane = await janeResponse.Content.ReadAsAsync<ContactDto>();
+var jane = await janeResponse.Content.ReadAsAsync<Contact>();
 
-await client.PostAsJsonAsync("contacts", new ContactDto("John"));
+await client.PostAsJsonAsync("contacts", new Contact("John"));
 ```
 
 This is where TypedRest comes in. TypedRest is a .NET and Java library for consuming RESTful APIs that behave in a "predictable" way. Rather than applying your knowledge about how a REST collection usually behaves you simply tell the library that this particular endpoint *is* a collection and get a collection-like interface in return.
 
 ```csharp
 var myService = new EntryEndpoint(new Uri("http://example.com/"));
-var contacts = new CollectionEndpoint<ContactDto>(myService, relativeUri: "./contacts");
+var contacts = new CollectionEndpoint<Contact>(myService, relativeUri: "./contacts");
 
 var contactList = await contacts.ReadAllAsync();
 var jane = await contacts["jane"].ReadAsync();
-await contacts.CreateAsync(new Contact("john"));
+await contacts.CreateAsync(new Contact("John"));
 ```
 
 TypedRest uses a classic object-oriented approach to provide you with building blocks for modeling [RESTful endpoints](endpoints/index.md). Behavior of endpoints is described by inheritance while navigation between them is described by composition. For example, we could redesign our sample from above to make the service's functionality easy to discover and consume using code completion:
@@ -37,7 +37,7 @@ class MyServiceClient : EntryEndpoint
   public MyServiceClient(Uri uri) : base(uri)
   {}
 
-  public ICollectionEndpoint<ContactDto> Contacts => new CollectionEndpoint<ContactDto>(this, relativeUri: "./contacts");
+  public ICollectionEndpoint<Contact> Contacts => new CollectionEndpoint<Contact>(this, relativeUri: "./contacts");
 }
 ```
 
@@ -47,7 +47,7 @@ The consuming code could look this:
 var myService = new MyServiceClient(new Uri("http://example.com/"));
 var contactList = await myService.Contacts.ReadAllAsync();
 var jane = await myService.Contacts["jane"].ReadAsync();
-await myService.Contacts.CreateAsync(new ContactDto("john"));
+await myService.Contacts.CreateAsync(new Contact("john"));
 ```
 
 TypedRest is all about nomenclature and patterns. An endpoint describes any resource addressable via an URI.
@@ -82,17 +82,17 @@ class MyServiceClient : EntryEndpoint
 // The TElementEndpoint type argument allows you to customize the specific type of element endpoint it creates.
 class ContactCollectionEndpoint : CollectionEndpointBase<Contact, ContactEndpoint>
 {
-  // Hard-coding the relative URI here makes the constructor signature nicer
+  // Hard-coding the relative URI here makes the constructor signature simpler
   public ContactCollectionEndpoint(IEndpoint referrer) : base(referrer, relativeUri: "./contacts")
   {}
 }
 
-class ContactEndpoint : ElementEndpoint<ContactDto>
+class ContactEndpoint : ElementEndpoint<Contact>
 {
   public ContactEndpoint(IEndpoint referrer, Uri relativeUri) : base(referrer, relativeUri)
   {}
 
-  public IElementEndpoint<NoteDto> Notes => new ElementEndpoint<NoteDto>(this, relativeUri: "./notes");
+  public IElementEndpoint<Note> Notes => new ElementEndpoint<Note>(this, relativeUri: "./notes");
 }
 ```
 
@@ -100,5 +100,7 @@ The consuming code could look this:
 
 ```csharp
 var myService = new MyServiceClient(new Uri("http://example.com/"));
-await myService.Contacts["jane"].Notes.SetAsync(new NoteDto("some note"));
+await myService.Contacts["jane"].Notes.SetAsync(new Note("some note"));
 ```
+
+Continue on to the **[Getting started](getting-started/index.md)** guide.
