@@ -5,8 +5,19 @@ edit_uri: blob/master/docs/
 strict: true
 
 theme: readthedocs
-
-markdown_extensions: [def_list]
 extra_css: [style.css]
 extra_javascript: [menu.js]
 
+markdown_extensions:
+  - admonition
+  - def_list
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - awesome-pages
+  # - redirects:
+  #    redirect_maps:
+  #      old/file.md: new/file.md
+  #      some_file.md: http://example.com
