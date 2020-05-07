@@ -1,0 +1,7 @@
+arrange:
+  - index.md
+  - introduction.md
+  - getting-started
+  - endpoints
+  - exception-mapping.md
+  - glossary.md
