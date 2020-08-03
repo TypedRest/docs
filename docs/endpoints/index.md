@@ -1,6 +1,6 @@
 title: Overview
 
-Endpoints are the main building blocks of TypedRest. An endpoint represents an URI that provides methods for interacting with a specific resource. The type of the endpoint determines the available methods.
+Endpoints are the main building blocks of TypedRest. An endpoint represents an URI that provides methods for interacting with a specific resource. The type of the endpoint determines the available methods. An endpoint can also provide child endpoints (represent child URIs) via composition.
 
 TypedRest provides a number of endpoint types modelling common REST patterns. Most APIs can be consumed by either directly using these types or by deriving from them and adding a few additional methods for special use cases.
 
@@ -30,3 +30,4 @@ TypedRest provides a number of endpoint types modelling common REST patterns. Mo
 - [Producer](rpc/producer.md) - produces entity as output
 - [Function](rpc/function.md) - takes entity as input and produces entity as output
 
+The constructors of all endpoints except entry endpoints take a `referrer` parameter. This is uses to inherit relative URI bases and configuration such as [error handling](../error-handling/index.md) and [link handling](../link-handling/index.md).

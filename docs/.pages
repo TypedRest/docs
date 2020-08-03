@@ -3,5 +3,7 @@ arrange:
   - introduction.md
   - getting-started
   - endpoints
-  - exception-mapping.md
+  - error-handling
+  - link-handling
+  - code-generation
   - glossary.md
