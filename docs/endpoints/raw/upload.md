@@ -1,3 +1,5 @@
+# Upload endpoint
+
 Endpoint that accepts binary uploads.
 
 | Method | Input       | Result | HTTP Verb | Description                   |

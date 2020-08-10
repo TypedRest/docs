@@ -1,3 +1,5 @@
+# Blob endpoint
+
 Endpoint for a binary blob that can be downloaded or uploaded.
 
 | Method   | Input       | Result      | HTTP Verb | Description                   |

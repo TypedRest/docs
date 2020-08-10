@@ -1,4 +1,4 @@
-# Overview
+# Exception mapping
 
 TypedRest maps non-success HTTP Status (4xx and 5xx) to exceptions. The following mappings are applied by default:
 

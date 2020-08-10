@@ -1,3 +1,5 @@
+# Glossary
+
 Resource
 : A server-side object addressable by an URI.
 

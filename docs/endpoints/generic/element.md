@@ -1,3 +1,5 @@
+# Element endpoint
+
 Endpoint for an individual resource.
 
 | Method | Input  | Result  | HTTP Verb | Description                                      |

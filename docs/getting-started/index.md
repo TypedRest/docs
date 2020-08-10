@@ -1,4 +1,4 @@
-# Overview
+# Getting started
 
 TypedRest is available for multiple platforms/languages. Please choose one of the following Getting Started Guides:
 

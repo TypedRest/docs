@@ -1,4 +1,4 @@
-# Overview
+# Link handling
 
 TypedRest supports a variety of different links:
 

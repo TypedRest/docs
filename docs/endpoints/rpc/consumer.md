@@ -1,3 +1,5 @@
+# Consumer endpoint
+
 RPC endpoint that takes an entity as input when invoked.
 
 | Method | Input  | Result | HTTP Verb | Description                       |

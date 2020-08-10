@@ -1,0 +1,7 @@
+arrange:
+  - index.md
+  - entry.md
+  - generic
+  - rpc
+  - raw
+  - reactive

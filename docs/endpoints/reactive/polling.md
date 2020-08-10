@@ -1,3 +1,5 @@
+# Polling endpoint
+
 Endpoint for a resource that can be polled for state changes.
 
 | Method         | Input  | Result        | HTTP Verb | Description                                      |
@@ -9,4 +11,4 @@ Endpoint for a resource that can be polled for state changes.
 | Merge          | Entity | Entity        | `PATCH`   | Modifies the existing entity by merging changes. |
 | Delete         | -      | -             | `DELETE`  | Deletes the element.                             |
 
-Extends [Element](../generic/element.md)
+Extends [Element endpoint](../generic/element.md)
