@@ -1,4 +1,4 @@
-title: Streaming Collection
+# Streaming Collection
 
 Endpoint for a collection of entities observable as an append-only stream using long-polling.
 

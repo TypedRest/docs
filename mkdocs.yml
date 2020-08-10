@@ -2,17 +2,30 @@ site_name: TypedRest
 site_url: https://typedrest.net/
 repo_url: https://github.com/TypedRest/docs
 edit_uri: blob/master/docs/
-strict: true
 
-theme: readthedocs
+theme:
+  name: material
+  features:
+    - tabs
+  icon:
+    logo: octicons/home-24
+    repo: fontawesome/brands/github
+
 extra_css: [style.css]
-extra_javascript: [menu.js]
 
 markdown_extensions:
-  - admonition
-  - def_list
+  - meta
   - toc:
       permalink: true
+  - attr_list
+  - def_list
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 
 plugins:
   - search
