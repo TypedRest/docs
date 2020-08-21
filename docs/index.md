@@ -12,20 +12,20 @@ Read the **[Introduction](introduction.md)** to TypedRest or jump right in with 
     var client = new MyClient(new Uri("http://example.com/"));
 
     // GET /contacts
-    var contactList = await client.Contacts.ReadAllAsync();
+    List<Contact> contactList = await client.Contacts.ReadAllAsync();
 
     // POST /contacts -> Location: /contacts/1337
-    var smith = await client.Contacts.CreateAsync(new Contact {Name = "Smith"});
+    ContactEndpoint smith = await client.Contacts.CreateAsync(new Contact {Name = "Smith"});
     //ContactEndpoint smith = client.Contacts["1337"];
 
     // GET /contacts/1337
-    var contact = await smith.ReadAsync();
+    Contact contact = await smith.ReadAsync();
 
     // PUT /contacts/1337/note
     await smith.Note.SetAsync(new Note {Content = "some note"});
 
     // GET /contacts/1337/note
-    var note = await smith.Note.ReadAsync();
+    Note note = await smith.Note.ReadAsync();
 
     // DELETE /contacts/1337
     await smith.DeleteAsync();
