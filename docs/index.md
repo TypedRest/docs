@@ -55,3 +55,29 @@ Read the **[Introduction](introduction.md)** to TypedRest or jump right in with 
     // DELETE /contacts/1337
     smith.delete();
     ```
+
+=== "TypeScript"
+
+    ```typescript
+    const client = new MyClient(new URL("http://example.com/"));
+
+    // GET /contacts
+    const contactList: Contact[] = await client.contacts.readAll();
+
+    // POST /contacts -> Location: /contacts/1337
+    const smith: ContactEndpoint = await client.contacts.create(new Contact("Smith"));
+    //const smith: ContactEndpoint = client.contacts.get("1337");
+
+    // GET /contacts/1337
+    contact: Contact = await smith.read();
+
+    // PUT /contacts/1337/note
+    await smith.note.set(new Note("some note"));
+
+    // GET /contacts/1337/note
+    const note: Note = await smith.note.read();
+
+    // DELETE /contacts/1337
+    await smith.delete();
+    ```
+ 

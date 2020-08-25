@@ -8,54 +8,113 @@ Assume the URI `/contacts/` represents a collection of address book entries. `GE
 
 Pretty standard stuff, right? The problem is that all this knowledge currently only exists in your head. When you actually perform operations on the collection in your code you are usually manually building your `GET`s and your `POST`s while serializing and deserializing message bodies to and from JSON.
 
-```csharp
-var client = new HttpClient {BaseAddress = new Uri("http://example.com/")};
+=== "C#"
 
-var contactsResponse = await client.GetAsync("contacts");
-var contactList = await contactsResponse.Content.ReadAsAsync<List<Contact>>();
+    ```csharp
+    var client = new HttpClient {BaseAddress = new Uri("http://example.com/")};
 
-var createResponse = await client.PostAsJsonAsync("contacts", new Contact {Name = "Smith"});
-var contactUri = createResponse.Headers.Location;
-//var contactUri = new Uri("contacts/1337", UriKind.Relative);
+    var contactsResponse = await client.GetAsync("contacts");
+    var contactList = await contactsResponse.Content.ReadAsAsync<List<Contact>>();
 
-var contactResponse = await client.GetAsync(contactUri);
-var contact = await contactResponse.Content.ReadAsAsync<Contact>();
-```
+    var createResponse = await client.PostAsJsonAsync("contacts", new Contact {Name = "Smith"});
+    var contactUri = createResponse.Headers.Location;
+    //var contactUri = new Uri("contacts/1337", UriKind.Relative);
 
-This is where TypedRest comes in. TypedRest is a .NET and Java library for consuming RESTful APIs that behave in a "predictable" way. Rather than applying your knowledge about how a REST collection usually behaves you simply tell the library that this particular endpoint *is* a collection and get a collection-like interface in return.
+    var contactResponse = await client.GetAsync(contactUri);
+    var contact = await contactResponse.Content.ReadAsAsync<Contact>();
+    ```
 
-```csharp
-var client = new EntryEndpoint(new Uri("http://example.com/"));
+=== "TypeScript"
 
-var contacts = new CollectionEndpoint<Contact>(client, relativeUri: "./contacts");
-var contactList = await contacts.ReadAllAsync();
+    ```typescript
+    const contactsResponse = await fetch("http://example.com/contacts");
+    const contactList = (await contactsResponse.json()) as Contact[];
 
-var smith = await contacts.CreateAsync(new Contact {Name = "Smith"});
-//var smith = contacts["1337"];
+    const createResponse = await fetch("http://example.com/contacts", {
+      body: JSON.stringify(new Contact("Smith"))
+    });
+    const contactUri = createResponse.headers.get("Location");
+    //const contactUri = "http://example.com/contacts/1337"
 
-var contact = await smith.ReadAsync();
-```
+    const contactResponse = await fetch(contactUri);
+    const contact = (await contactResponse.json()) as Contact;
+    ```
+
+This is where TypedRest comes in. TypedRest is a set of libraries for consuming RESTful APIs that behave in a "predictable" way. Rather than applying your knowledge about how a REST collection usually behaves you simply tell TypedRest that this particular endpoint *is* a collection and get a collection-like interface in return.
+
+=== "C#"
+
+    ```csharp
+    var client = new EntryEndpoint(new Uri("http://example.com/"));
+
+    var contacts = new CollectionEndpoint<Contact>(client, relativeUri: "./contacts");
+    var contactList = await contacts.ReadAllAsync();
+
+    var smith = await contacts.CreateAsync(new Contact {Name = "Smith"});
+    //var smith = contacts["1337"];
+
+    var contact = await smith.ReadAsync();
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    const client = new EntryEndpoint(new URL("http://example.com/"));
+
+    const contacts = new CollectionEndpoint<Contact>(client, "./contacts");
+    const contactList = await contacts.readAll();
+
+    const smith = await contacts.create(new Contact("Smith"));
+    //const smith = contacts["1337"];
+
+    const contact = await smith.read();
+    ```
 
 TypedRest uses an object-oriented approach to provide you with building blocks for modeling [RESTful endpoints](endpoints/index.md). Behavior of endpoints is described by inheritance while navigation between them is described by composition. For example, we could redesign our sample from above to make the service's functionality easy to discover and consume using code completion:
 
-```csharp
-class MyClient : EntryEndpoint
-{
-  public MyClient(Uri uri) : base(uri)
-  {}
+=== "C#"
 
-  public ICollectionEndpoint<Contact> Contacts => new CollectionEndpoint<Contact>(this, relativeUri: "./contacts");
-}
-```
+    ```csharp
+    class MyClient : EntryEndpoint
+    {
+      public MyClient(Uri uri)
+        : base(uri)
+      {}
+
+      public ICollectionEndpoint<Contact> Contacts
+        => new CollectionEndpoint<Contact>(this, relativeUri: "./contacts");
+    }
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    class MyClient extends EntryEndpoint {
+      get contacts() {
+        return new CollectionEndpoint<Contact>(this, "./contacts");
+      }
+    }
+    ```
 
 The consuming code could look this:
 
-```csharp
-var client = new MyClient(new Uri("http://example.com/"));
-var contactList = await client.Contacts.ReadAllAsync();
-var smith = await client.Contacts.CreateAsync(new Contact {Name = "Smith"});
-var contact = await smith.ReadAsync();
-```
+=== "C#"
+
+    ```csharp
+    var client = new MyClient(new Uri("http://example.com/"));
+    var contactList = await client.Contacts.ReadAllAsync();
+    var smith = await client.Contacts.CreateAsync(new Contact {Name = "Smith"});
+    var contact = await smith.ReadAsync();
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    const client = new MyClient(new URL("http://example.com/"));
+    const contactList = await client.contacts.readAll();
+    const smith = await client.contacts.create(new Contact("Smith"));
+    const contact = await smith.read();
+    ```
 
 TypedRest is all about nomenclature and patterns. An endpoint describes any resource addressable via an URI.
 
@@ -76,35 +135,72 @@ We consider TypedRest's design to be opinionated yet pragmatic. The path of leas
 
 Of course, we don't expect our predefined patterns to cover all possible use cases. This where good old "extension through inheritance" comes into play. Let's say our sample API from above also allows us to store a note associated with a contact. We need to extend `ElementEndpoint` for individual `Contact` instances to expose this functionality. We also need to replace `CollectionEndpoint` with something that builds instances of our specialized element endpoint rather than using `ElementEndpoint`. Let's get coding!
 
-```csharp
-class MyClient : EntryEndpoint
-{
-  public MyClient(Uri uri) : base(uri)
-  {}
+=== "C#"
 
-  public ContactCollectionEndpoint Contacts => new ContactCollectionEndpoint(this);
-}
+    ```csharp
+    class MyClient : EntryEndpoint
+    {
+      public MyClient(Uri uri) : base(uri)
+      {}
+    
+      public ContactCollectionEndpoint Contacts
+        => new ContactCollectionEndpoint(this);
+    }
 
-class ContactCollectionEndpoint : CollectionEndpointBase<Contact, ContactEndpoint>
-{
-  public ContactCollectionEndpoint(IEndpoint referrer) : base(referrer, relativeUri: "./contacts")
-  {}
-}
+    class ContactCollectionEndpoint : CollectionEndpoint<Contact, ContactEndpoint>
+    {
+      public ContactCollectionEndpoint(IEndpoint referrer)
+        : base(referrer, relativeUri: "./contacts")
+      {}
+    }
 
-class ContactEndpoint : ElementEndpoint<Contact>
-{
-  public ContactEndpoint(IEndpoint referrer, Uri relativeUri) : base(referrer, relativeUri)
-  {}
+    class ContactEndpoint : ElementEndpoint<Contact>
+    {
+      public ContactEndpoint(IEndpoint referrer, Uri relativeUri)
+        : base(referrer, relativeUri)
+      {}
 
-  public IElementEndpoint<Note> Note => new ElementEndpoint<Note>(this, relativeUri: "./note");
-}
-```
+      public IElementEndpoint<Note> Note
+        => new ElementEndpoint<Note>(this, relativeUri: "./note");
+    }
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    class MyClient extends EntryEndpoint {
+      get contacts() {
+        return new ContactCollectionEndpoint(this);
+      }
+    }
+
+    class ContactCollectionEndpoint extends GenericCollectionEndpoint<Contact, ContactEndpoint> {
+      constructor(referrer: Endpoint) {
+        super(referrer, "./contacts", ContactEndpoint);
+      }
+    }
+
+    class ContactEndpoint extends ElementEndpoint<Contact> {
+      get note() {
+        return new ElementEndpoint<Note>(this, "./note");
+      }
+    }
+    ```
 
 The consuming code could look this:
 
-```csharp
-var client = new MyClient(new Uri("http://example.com/"));
-await client.Contacts["1337"].Note.SetAsync(new Note {Content = "some note"});
-```
+=== "C#"
+
+    ```csharp
+    var client = new MyClient(new Uri("http://example.com/"));
+    await client.Contacts["1337"].Note.SetAsync(new Note {Content = "some note"});
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    const client = new MyClient(new URL("http://example.com/"));
+    await client.contacts.get("1337").note.set(new Note("some note"));
+    ```
 
 Continue on to the **[Getting started](getting-started/index.md)** guide.
