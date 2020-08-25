@@ -25,3 +25,4 @@ If you wish to use TypedRest in an ASP.NET Core web service (or any other kind o
 
 - [API documentation](https://dotnet.typedrest.net/)
 - [GitHub repository](https://github.com/TypedRest/TypedRest-DotNet)
+- [Sample project](https://github.com/TypedRest/Sample-DotNet)
