@@ -4,8 +4,6 @@ title: Home
 
 TypedRest helps you build type-safe, fluent-style REST API clients. Common REST patterns such as collections are represented as classes, allowing you to write more idiomatic code.
 
-Read the **[Introduction](introduction.md)** to TypedRest or jump right in with the **[Getting started](getting-started/index.md)** guide.
-
 === "C#"
 
     ```csharp
@@ -80,4 +78,23 @@ Read the **[Introduction](introduction.md)** to TypedRest or jump right in with 
     // DELETE /contacts/1337
     await smith.delete();
     ```
- 
+
+## Documentation
+
+[Introduction](introduction.md)
+: What is TypedRest and how can it help me?
+
+[Getting Started](getting-started/index.md)
+: How do I use TypedRest in my projects?
+
+[Endpoints](endpoints/index.md)
+: Documentation for all endpoint types provided by TypedRest.
+
+[Error handling](error-handling/index.md)
+: How to handle API errors with TypedRest.
+
+[Link handling](link-handling/index.md)
+: How to handle relative URIs, link headers, HATEOS, etc. with TypedRest.
+
+[Code generation](code-generation/index.md)
+: Auto-generate code for TypedRest from Swagger/OpenAPI sepc.

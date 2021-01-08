@@ -2,6 +2,8 @@
 
 There have been innumerable papers, posts and articles providing guidelines on how to design RESTful web services. Most of these guidelines are intended to make the behavior of web services more predictable for humans and machines alike. For example, the appropriate use of HTTP verbs allows developers to easily distinguish safe operations (such as `GET` and `HEAD`) from unsafe operations (such as `POST` and `DELETE`). Intermediate proxy servers can use this same information to determine candidates for caching. The plethora of HTTP headers provide many additional ways to express metadata and API structure in a standardized form.
 
+## The "old" way
+
 While this slowly evolving consensus on "the right way" to design new APIs makes understanding such APIs easier, it does not necessarily help when actually consuming them. While HTTP libraries and tools expose all the underlying components (HTTP verbs/methods, headers, etc.) the burden of actually interpreting and combining all the pieces still lies with the developer. Let us take a look at an example:
 
 Assume the URI `/contacts/` represents a collection of address book entries. `GET`ing the collection itself returns all entries. `GET`ing an URI like `/contacts/1337` gives you a specific entry. `POST`ing to the collection adds a new element to it and returns the URI of the newly created resource using the `Location` header.
@@ -40,6 +42,8 @@ Pretty standard stuff, right? The problem is that all this knowledge currently o
     const contact = (await contactResponse.json()) as Contact;
     ```
 
+## Better with TypedRest
+
 This is where TypedRest comes in. TypedRest is a set of libraries for consuming RESTful APIs that behave in a "predictable" way. Rather than applying your knowledge about how a REST collection usually behaves you simply tell TypedRest that this particular endpoint *is* a collection and get a collection-like interface in return.
 
 === "C#"
@@ -69,6 +73,8 @@ This is where TypedRest comes in. TypedRest is a set of libraries for consuming 
 
     const contact = await smith.read();
     ```
+
+## Endpoints
 
 TypedRest uses an object-oriented approach to provide you with building blocks for modeling [RESTful endpoints](endpoints/index.md). Behavior of endpoints is described by inheritance while navigation between them is described by composition. For example, we could redesign our sample from above to make the service's functionality easy to discover and consume using code completion:
 
@@ -115,6 +121,8 @@ The consuming code could look this:
     const smith = await client.contacts.create(new Contact("Smith"));
     const contact = await smith.read();
     ```
+
+## Patterns
 
 TypedRest is all about nomenclature and patterns. An endpoint describes any resource addressable via an URI.
 
@@ -202,5 +210,7 @@ The consuming code could look this:
     const client = new MyClient(new URL("http://example.com/"));
     await client.contacts.get("1337").note.set(new Note("some note"));
     ```
+
+## Next steps
 
 Continue on to the **[Getting started](getting-started/index.md)** guide.
