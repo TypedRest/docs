@@ -5,11 +5,14 @@ edit_uri: blob/master/docs/
 
 theme:
   name: material
-  features:
-    - navigation.tabs
   icon:
     logo: octicons/home-24
     repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - toc.integrate
 
 extra_css: [style.css]
 extra_javascript: [matomo.js]
