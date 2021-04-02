@@ -2,7 +2,7 @@
 
 Endpoints are the main building blocks of TypedRest. An endpoint represents an URI that provides methods for interacting with a specific resource. The type of the endpoint determines the available methods. An endpoint can also provide child endpoints (represent child URIs) via composition.
 
-TypedRest provides a number of endpoint types modelling common REST patterns. Most APIs can be consumed by either directly using these types or by deriving from them and adding a few additional methods for special use cases.
+TypedRest provides a number of endpoint types modelling common REST patterns. Most APIs can be consumed by either directly using these types or by deriving from them and adding additional methods for special use cases.
 
 **[Entry endpoints](entry.md)** represent the top-level URI of APIs.
 
@@ -30,4 +30,4 @@ TypedRest provides a number of endpoint types modelling common REST patterns. Mo
 - [Streaming endpoint](reactive/streaming.md) - stream of entities via persistent connection
 - [Streaming Collection endpoint](reactive/streaming-collection.md) - collection of entities observable as append-only stream
 
-The constructors of all endpoints except entry endpoints take a `referrer` parameter. This is uses to inherit relative URI bases and configuration such as [error handling endpoint](../error-handling/index.md) and [link handling](../link-handling/index.md).
+The constructors of all endpoints except entry endpoints take a `referrer` parameter. This is uses to inherit relative URI bases and configuration such as [error handling](../error-handling/index.md) and [link handling](../link-handling/index.md).
