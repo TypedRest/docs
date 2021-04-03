@@ -33,7 +33,7 @@ Pretty standard stuff, right? The problem is that all this knowledge currently o
     const contactList = (await contactsResponse.json()) as Contact[];
 
     const createResponse = await fetch("http://example.com/contacts", {
-      body: JSON.stringify(new Contact("Smith"))
+      body: JSON.stringify({name: "Smith"})
     });
     const contactUri = createResponse.headers.get("Location");
     //const contactUri = "http://example.com/contacts/1337"
@@ -68,8 +68,8 @@ This is where TypedRest comes in. TypedRest is a set of libraries for consuming 
     const contacts = new CollectionEndpoint<Contact>(client, "./contacts");
     const contactList = await contacts.readAll();
 
-    const smith = await contacts.create(new Contact("Smith"));
-    //const smith = contacts["1337"];
+    const smith = await contacts.create({name: "Smith"});
+    //const smith = contacts.get("1337");
 
     const contact = await smith.read();
     ```
@@ -118,7 +118,7 @@ The consuming code could look this:
     ```typescript
     const client = new MyClient(new URL("http://example.com/"));
     const contactList = await client.contacts.readAll();
-    const smith = await client.contacts.create(new Contact("Smith"));
+    const smith = await client.contacts.create({name: "Smith"});
     const contact = await smith.read();
     ```
 
@@ -208,7 +208,7 @@ The consuming code could look this:
 
     ```typescript
     const client = new MyClient(new URL("http://example.com/"));
-    await client.contacts.get("1337").note.set(new Note("some note"));
+    await client.contacts.get("1337").note.set({content: "some note"});
     ```
 
 ## Next steps
