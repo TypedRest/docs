@@ -54,6 +54,31 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
     smith.delete();
     ```
 
+=== "Kotlin"
+
+    ```kotlin
+    val client = MyClient(URI.create("http://example.com/"))
+
+    // GET /contacts
+    val contactList: List<Contact> = client.contacts.readAll()
+
+    // POST /contacts -> Location: /contacts/1337
+    val smith: ContactEndpoint = client.contacts.create(Contact("Smith"))
+    //val smith: ContactEndpoint = client.contacts["1337"]
+
+    // GET /contacts/1337
+    val contact: Contact = smith.read()
+
+    // PUT /contacts/1337/note
+    smith.note.set(Note("some note"))
+
+    // GET /contacts/1337/note
+    val note: Note = smith.note.read()
+
+    // DELETE /contacts/1337
+    smith.delete()
+    ```
+
 === "TypeScript"
 
     ```typescript
