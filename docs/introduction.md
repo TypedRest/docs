@@ -81,14 +81,9 @@ TypedRest uses an object-oriented approach to provide you with building blocks f
 === "C#"
 
     ```csharp
-    class MyClient : EntryEndpoint
+    class MyClient(Uri uri) : EntryEndpoint(uri)
     {
-      public MyClient(Uri uri)
-        : base(uri)
-      {}
-
-      public ICollectionEndpoint<Contact> Contacts
-        => new CollectionEndpoint<Contact>(this, relativeUri: "./contacts");
+      public CollectionEndpoint<Contact> Contacts => new(this, relativeUri: "./contacts");
     }
     ```
 
@@ -146,30 +141,18 @@ Of course, we don't expect our predefined patterns to cover all possible use cas
 === "C#"
 
     ```csharp
-    class MyClient : EntryEndpoint
+    class MyClient(Uri uri) : EntryEndpoint(uri)
     {
-      public MyClient(Uri uri) : base(uri)
-      {}
-    
-      public ContactCollectionEndpoint Contacts
-        => new ContactCollectionEndpoint(this);
+      public ContactCollectionEndpoint Contacts => new(this);
     }
 
-    class ContactCollectionEndpoint : CollectionEndpoint<Contact, ContactEndpoint>
-    {
-      public ContactCollectionEndpoint(IEndpoint referrer)
-        : base(referrer, relativeUri: "./contacts")
-      {}
-    }
+    class ContactCollectionEndpoint(IEndpoint referrer)
+      : CollectionEndpoint<Contact, ContactEndpoint>(referrer, relativeUri: "./contacts");
 
-    class ContactEndpoint : ElementEndpoint<Contact>
+    class ContactEndpoint(IEndpoint referrer, Uri relativeUri)
+      : ElementEndpoint<Contact>(referrer, relativeUri)
     {
-      public ContactEndpoint(IEndpoint referrer, Uri relativeUri)
-        : base(referrer, relativeUri)
-      {}
-
-      public IElementEndpoint<Note> Note
-        => new ElementEndpoint<Note>(this, relativeUri: "./note");
+      public ElementEndpoint<Note> Note => new(this, relativeUri: "./note");
     }
     ```
 
