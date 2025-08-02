@@ -6,5 +6,6 @@ nav:
   - serializers
   - link-handling
   - error-handling
+  - testing
   - code-generation
   - imprint.md
