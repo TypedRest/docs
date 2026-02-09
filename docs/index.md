@@ -115,6 +115,9 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
 [Endpoints](endpoints/index.md)
 : Documentation for all endpoint types provided by TypedRest.
 
+[Serializers](serializers/index.md)
+: How to convert objects to and from the wire format (e.g., JSON).
+
 [Error handling](error-handling/index.md)
 : How to handle API errors with TypedRest.
 

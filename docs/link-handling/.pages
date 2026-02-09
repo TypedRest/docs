@@ -1,0 +1,6 @@
+nav:
+  - index.md
+  - relative-uris.md
+  - uri-templates.md
+  - link-header.md
+  - hal.md

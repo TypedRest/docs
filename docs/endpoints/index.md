@@ -30,4 +30,4 @@ TypedRest provides a number of endpoint types modelling common REST patterns. Mo
 - [Streaming endpoint](reactive/streaming.md) - stream of entities via persistent connection
 - [Streaming Collection endpoint](reactive/streaming-collection.md) - collection of entities observable as append-only stream
 
-The constructors of all endpoints except entry endpoints take a `referrer` parameter. This is uses to inherit relative URI bases and configuration such as [error handling](../error-handling/index.md) and [link handling](../link-handling/index.md).
+The constructors of all endpoints (except entry endpoints) take a `referrer` parameter. This is used to inherit [relative URI bases](../link-handling/index.md), [serializers](../serializers/index.md) and [error handling](../error-handling/index.md).

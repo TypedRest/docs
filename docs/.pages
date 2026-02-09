@@ -3,6 +3,7 @@ nav:
   - introduction.md
   - getting-started
   - endpoints
+  - serializers
   - error-handling
   - link-handling
   - code-generation
