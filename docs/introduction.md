@@ -196,4 +196,4 @@ The consuming code could look this:
 
 ## Next steps
 
-Continue on to the **[Getting started](getting-started/index.md)** guide.
+Continue on to the **[Setup](setup/index.md)** guide.

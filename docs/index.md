@@ -109,7 +109,7 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
 [Introduction](introduction.md)
 : What is TypedRest and how can it help me?
 
-[Getting Started](getting-started/index.md)
+[Setup](setup/index.md)
 : How do I use TypedRest in my projects?
 
 [Endpoints](endpoints/index.md)
