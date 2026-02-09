@@ -40,6 +40,30 @@ After receiving a HAL response, you can resolve links just like with HTTP Link h
     Uri userUri = endpoint.LinkTemplate("search", new { id = "456" });
     ```
 
+=== "Java"
+
+    ```java
+    endpoint.read();
+
+    // Resolve a single link
+    URI ordersUri = endpoint.link("orders");
+
+    // Resolve a templated link
+    URI userUri = endpoint.linkTemplate("search", Map.of("id", "456"));
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    endpoint.read()
+
+    // Resolve a single link
+    val ordersUri = endpoint.link("orders")
+
+    // Resolve a templated link
+    val userUri = endpoint.linkTemplate("search", mapOf("id" to "456"))
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -79,6 +103,24 @@ Retrieve all links with `GetLinks`:
     }
     ```
 
+=== "Java"
+
+    ```java
+    List<Link> items = endpoint.getLinks("item");
+    for (Link link : items) {
+        System.out.println(link.getTitle() + ": " + link.getUri());
+    }
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val items = endpoint.getLinks("item")
+    for (link in items) {
+        println("${link.title}: ${link.uri}")
+    }
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -107,6 +149,20 @@ HAL links can be marked as [templates](uri-templates.md) with the `templated` pr
 
     ```csharp
     var findUri = endpoint.LinkTemplate("find", new { name = "John", email = "john@example.com" });
+    // Result: /users?name=John&email=john%40example.com
+    ```
+
+=== "Java"
+
+    ```java
+    URI findUri = endpoint.linkTemplate("find", Map.of("name", "John", "email", "john@example.com"));
+    // Result: /users?name=John&email=john%40example.com
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val findUri = endpoint.linkTemplate("find", mapOf("name" to "John", "email" to "john@example.com"))
     // Result: /users?name=John&email=john%40example.com
     ```
 

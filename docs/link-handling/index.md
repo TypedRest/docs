@@ -17,6 +17,18 @@ All endpoints provide methods for resolving links:
     - `Link(rel)` - Resolves a single link with a specific relation type
     - `LinkTemplate(rel, variables)` - Resolves a link template with variables
 
+=== "Java"
+
+    - `getLinks(rel)` - Resolves all links with a specific relation type
+    - `link(rel)` - Resolves a single link with a specific relation type
+    - `linkTemplate(rel, variables)` - Resolves a link template with variables
+
+=== "Kotlin"
+
+    - `getLinks(rel)` - Resolves all links with a specific relation type
+    - `link(rel)` - Resolves a single link with a specific relation type
+    - `linkTemplate(rel, variables)` - Resolves a link template with variables
+
 === "TypeScript"
 
     - `getLinks(rel)` - Resolves all links with a specific relation type

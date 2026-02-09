@@ -12,6 +12,22 @@ The most straightforward way to navigate between endpoints is using hard-coded r
     // Results in: http://example.com/api/contacts
     ```
 
+=== "Java"
+
+    ```java
+    EntryEndpoint client = new EntryEndpoint(URI.create("http://example.com/api/"));
+    CollectionEndpoint<Contact> contacts = new CollectionEndpoint<>(client, "contacts", Contact.class);
+    // Results in: http://example.com/api/contacts
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val client = EntryEndpoint(URI.create("http://example.com/api/"))
+    val contacts = CollectionEndpoint(client, "contacts", Contact::class.java)
+    // Results in: http://example.com/api/contacts
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -45,6 +61,36 @@ This is often not the desired behavior. TypedRest provides a non-standard `./` p
     // child2.Uri = http://example.com/endpoint/subresource
     ```
 
+=== "Java"
+
+    ```java
+    ElementEndpoint<MyEntity> parent = new ElementEndpoint<>(client, "endpoint", MyEntity.class);
+    // parent.getUri() = http://example.com/endpoint
+
+    // Without ./ prefix - replaces last segment
+    ActionEndpoint child1 = new ActionEndpoint(parent, "subresource");
+    // child1.getUri() = http://example.com/subresource
+
+    // With ./ prefix - appends to path
+    ActionEndpoint child2 = new ActionEndpoint(parent, "./subresource");
+    // child2.getUri() = http://example.com/endpoint/subresource
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val parent = ElementEndpoint(client, "endpoint", MyEntity::class.java)
+    // parent.uri = http://example.com/endpoint
+
+    // Without ./ prefix - replaces last segment
+    val child1 = ActionEndpoint(parent, "subresource")
+    // child1.uri = http://example.com/subresource
+
+    // With ./ prefix - appends to path
+    val child2 = ActionEndpoint(parent, "./subresource")
+    // child2.uri = http://example.com/endpoint/subresource
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -75,6 +121,27 @@ You can also register default links that will be used when the server doesn't pr
             : base(referrer, relativeUri)
         {
             SetDefaultLink("related", "./related-resource");
+        }
+    }
+    ```
+
+=== "Java"
+
+    ```java
+    class MyEndpoint extends AbstractEndpoint {
+        public MyEndpoint(Endpoint referrer, String relativeUri) {
+            super(referrer, relativeUri);
+            setDefaultLink("related", "./related-resource");
+        }
+    }
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    class MyEndpoint(referrer: Endpoint, relativeUri: String) : AbstractEndpoint(referrer, relativeUri) {
+        init {
+            setDefaultLink("related", "./related-resource")
         }
     }
     ```

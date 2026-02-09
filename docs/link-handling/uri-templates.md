@@ -50,6 +50,30 @@ Use the `LinkTemplate` method to resolve a template with variables:
     var uri = endpoint.LinkTemplate("user", variables);
     ```
 
+=== "Java"
+
+    ```java
+    // After receiving a response with the link template
+    URI userUri = endpoint.linkTemplate("user", Map.of("id", "123"));
+    // Result: http://example.com/users/123
+
+    // With query parameters
+    URI searchUri = endpoint.linkTemplate("search", Map.of("q", "test", "limit", 10));
+    // Result: http://example.com/search?q=test&limit=10
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    // After receiving a response with the link template
+    val userUri = endpoint.linkTemplate("user", mapOf("id" to "123"))
+    // Result: http://example.com/users/123
+
+    // With query parameters
+    val searchUri = endpoint.linkTemplate("search", mapOf("q" to "test", "limit" to 10))
+    // Result: http://example.com/search?q=test&limit=10
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -76,6 +100,29 @@ You can register default link templates that will be used when the server doesn'
         {
             // Set a default template for the "child" relation
             SetDefaultLinkTemplate("child", "./{id}");
+        }
+    }
+    ```
+
+=== "Java"
+
+    ```java
+    class MyEndpoint extends AbstractEndpoint {
+        public MyEndpoint(Endpoint referrer, String relativeUri) {
+            super(referrer, relativeUri);
+            // Set a default template for the "child" relation
+            setDefaultLinkTemplate("child", "./{id}");
+        }
+    }
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    class MyEndpoint(referrer: Endpoint, relativeUri: String) : AbstractEndpoint(referrer, relativeUri) {
+        init {
+            // Set a default template for the "child" relation
+            setDefaultLinkTemplate("child", "./{id}")
         }
     }
     ```

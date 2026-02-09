@@ -37,6 +37,38 @@ TypedRest automatically extracts links from response headers after each request.
     Uri collectionUri = endpoint.Link("next");
     ```
 
+=== "Java"
+
+    ```java
+    // Perform a request
+    endpoint.read();
+
+    // Get all links with a specific relation type
+    List<Link> links = endpoint.getLinks("child");
+    for (Link link : links) {
+        System.out.println("URI: " + link.getUri() + ", Title: " + link.getTitle());
+    }
+
+    // Get a single link
+    URI collectionUri = endpoint.link("next");
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    // Perform a request
+    endpoint.read()
+
+    // Get all links with a specific relation type
+    val links = endpoint.getLinks("child")
+    for (link in links) {
+        println("URI: ${link.uri}, Title: ${link.title}")
+    }
+
+    // Get a single link
+    val collectionUri = endpoint.link("next")
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -70,6 +102,26 @@ This is a non-standard extension, but it allows servers to provide dynamic link 
     // Link: </users/{id}>; rel=user; templated=true
 
     var userUri = endpoint.LinkTemplate("user", new { id = "123" });
+    // Result: http://example.com/users/123
+    ```
+
+=== "Java"
+
+    ```java
+    // Server response:
+    // Link: </users/{id}>; rel=user; templated=true
+
+    URI userUri = endpoint.linkTemplate("user", Map.of("id", "123"));
+    // Result: http://example.com/users/123
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    // Server response:
+    // Link: </users/{id}>; rel=user; templated=true
+
+    val userUri = endpoint.linkTemplate("user", mapOf("id" to "123"))
     // Result: http://example.com/users/123
     ```
 
