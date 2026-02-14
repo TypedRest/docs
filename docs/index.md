@@ -124,5 +124,8 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
 [Link handling](link-handling/index.md)
 : How to handle relative URIs, link headers, HATEOS, etc. with TypedRest.
 
+[Testing](testing/index.md)
+: How to create unit and integration tests when using TypedRest.
+
 [Code generation](code-generation/index.md)
 : Auto-generate code for TypedRest from Swagger/OpenAPI sepc.
