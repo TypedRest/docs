@@ -26,6 +26,66 @@ Pretty standard stuff, right? The problem is that all this knowledge currently o
     var contact = await contactResponse.Content.ReadAsAsync<Contact>();
     ```
 
+=== "Java"
+
+    ```java
+    HttpClient client = HttpClient.newBuilder()
+        .build();
+
+    HttpRequest contactsRequest = HttpRequest.newBuilder()
+        .uri(URI.create("http://example.com/contacts"))
+        .GET()
+        .build();
+    HttpResponse<String> contactsResponse = client.send(contactsRequest, HttpResponse.BodyHandlers.ofString());
+    List<Contact> contactList = objectMapper.readValue(contactsResponse.body(), new TypeReference<List<Contact>>() {});
+
+    String requestBody = objectMapper.writeValueAsString(new Contact("Smith"));
+    HttpRequest createRequest = HttpRequest.newBuilder()
+        .uri(URI.create("http://example.com/contacts"))
+        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+        .build();
+    HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString());
+    URI contactUri = URI.create(createResponse.headers().firstValue("Location").get());
+    //URI contactUri = URI.create("contacts/1337");
+
+    HttpRequest contactRequest = HttpRequest.newBuilder()
+        .uri(contactUri)
+        .GET()
+        .build();
+    HttpResponse<String> contactResponse = client.send(contactRequest, HttpResponse.BodyHandlers.ofString());
+    Contact contact = objectMapper.readValue(contactResponse.body(), Contact.class);
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val client = HttpClient.newBuilder()
+        .build()
+
+    val contactsRequest = HttpRequest.newBuilder()
+        .uri(URI.create("http://example.com/contacts"))
+        .GET()
+        .build()
+    val contactsResponse = client.send(contactsRequest, HttpResponse.BodyHandlers.ofString())
+    val contactList = objectMapper.readValue<List<Contact>>(contactsResponse.body())
+
+    val requestBody = objectMapper.writeValueAsString(Contact("Smith"))
+    val createRequest = HttpRequest.newBuilder()
+        .uri(URI.create("http://example.com/contacts"))
+        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+        .build()
+    val createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString())
+    val contactUri = URI.create(createResponse.headers().firstValue("Location").get())
+    //val contactUri = URI.create("contacts/1337")
+
+    val contactRequest = HttpRequest.newBuilder()
+        .uri(contactUri)
+        .GET()
+        .build()
+    val contactResponse = client.send(contactRequest, HttpResponse.BodyHandlers.ofString())
+    val contact = objectMapper.readValue<Contact>(contactResponse.body())
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -60,6 +120,34 @@ This is where TypedRest comes in. TypedRest is a set of libraries for consuming 
     var contact = await smith.ReadAsync();
     ```
 
+=== "Java"
+
+    ```java
+    EntryEndpoint client = new EntryEndpoint(URI.create("http://example.com/"));
+
+    CollectionEndpoint<Contact> contacts = new CollectionEndpointImpl<>(client, "./contacts", Contact.class);
+    List<Contact> contactList = contacts.readAll();
+
+    ElementEndpoint<Contact> smith = contacts.create(new Contact("Smith"));
+    //ElementEndpoint<Contact> smith = contacts.get("1337");
+
+    Contact contact = smith.read();
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val client = EntryEndpoint(URI.create("http://example.com/"))
+
+    val contacts = CollectionEndpointImpl(client, "./contacts", Contact::class.java)
+    val contactList = contacts.readAll()
+
+    val smith = contacts.create(Contact("Smith"))
+    //val smith = contacts["1337"]
+
+    val contact = smith.read()
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -87,6 +175,29 @@ TypedRest uses an object-oriented approach to provide you with building blocks f
     }
     ```
 
+=== "Java"
+
+    ```java
+    class MyClient extends EntryEndpoint {
+      public MyClient(URI uri) {
+        super(uri);
+      }
+
+      public CollectionEndpoint<Contact> getContacts() {
+        return new CollectionEndpointImpl<>(this, "./contacts", Contact.class);
+      }
+    }
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    class MyClient(uri: URI) : EntryEndpoint(uri) {
+      val contacts: CollectionEndpoint<Contact>
+        get() = CollectionEndpointImpl(this, "./contacts", Contact::class.java)
+    }
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -106,6 +217,24 @@ The consuming code could look this:
     var contactList = await client.Contacts.ReadAllAsync();
     var smith = await client.Contacts.CreateAsync(new Contact {Name = "Smith"});
     var contact = await smith.ReadAsync();
+    ```
+
+=== "Java"
+
+    ```java
+    MyClient client = new MyClient(URI.create("http://example.com/"));
+    List<Contact> contactList = client.getContacts().readAll();
+    ElementEndpoint<Contact> smith = client.getContacts().create(new Contact("Smith"));
+    Contact contact = smith.read();
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val client = MyClient(URI.create("http://example.com/"))
+    val contactList = client.contacts.readAll()
+    val smith = client.contacts.create(Contact("Smith"))
+    val contact = smith.read()
     ```
 
 === "TypeScript"
@@ -156,6 +285,54 @@ Of course, we don't expect our predefined patterns to cover all possible use cas
     }
     ```
 
+=== "Java"
+
+    ```java
+    class MyClient extends EntryEndpoint {
+      public MyClient(URI uri) {
+        super(uri);
+      }
+
+      public ContactCollectionEndpoint getContacts() {
+        return new ContactCollectionEndpoint(this);
+      }
+    }
+
+    class ContactCollectionEndpoint extends GenericCollectionEndpointImpl<Contact, ContactEndpoint> {
+      public ContactCollectionEndpoint(Endpoint referrer) {
+        super(referrer, "./contacts", Contact.class, ContactEndpoint::new);
+      }
+    }
+
+    class ContactEndpoint extends ElementEndpointImpl<Contact> {
+      public ContactEndpoint(Endpoint referrer, URI relativeUri) {
+        super(referrer, relativeUri, Contact.class);
+      }
+
+      public ElementEndpoint<Note> getNote() {
+        return new ElementEndpointImpl<>(this, "./note", Note.class);
+      }
+    }
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    class MyClient(uri: URI) : EntryEndpoint(uri) {
+      val contacts: ContactCollectionEndpoint
+        get() = ContactCollectionEndpoint(this)
+    }
+
+    class ContactCollectionEndpoint(referrer: Endpoint) :
+      GenericCollectionEndpointImpl<Contact, ContactEndpoint>(referrer, "./contacts", Contact::class.java, ::ContactEndpoint)
+
+    class ContactEndpoint(referrer: Endpoint, relativeUri: URI) :
+      ElementEndpointImpl<Contact>(referrer, relativeUri, Contact::class.java) {
+      val note: ElementEndpoint<Note>
+        get() = ElementEndpointImpl(this, "./note", Note::class.java)
+    }
+    ```
+
 === "TypeScript"
 
     ```typescript
@@ -185,6 +362,20 @@ The consuming code could look this:
     ```csharp
     var client = new MyClient(new Uri("http://example.com/"));
     await client.Contacts["1337"].Note.SetAsync(new Note {Content = "some note"});
+    ```
+
+=== "Java"
+
+    ```java
+    MyClient client = new MyClient(URI.create("http://example.com/"));
+    client.getContacts().get("1337").getNote().set(new Note("some note"));
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    val client = MyClient(URI.create("http://example.com/"))
+    client.contacts["1337"].note.set(Note("some note"))
     ```
 
 === "TypeScript"
