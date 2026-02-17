@@ -112,6 +112,9 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
 [Setup](setup/index.md)
 : How do I use TypedRest in my projects?
 
+[Testing](testing/index.md)
+: How to write unit tests for your TypedRest endpoint classes.
+
 [Endpoints](endpoints/index.md)
 : Documentation for all endpoint types provided by TypedRest.
 
