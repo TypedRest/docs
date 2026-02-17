@@ -4,14 +4,20 @@
 
 Add one or more of the following Maven artifacts to your project:
 
-[typedrest-core](https://mvnrepository.com/artifact/com.oneandone/typedrest-core)  
+[typedrest](https://central.sonatype.com/artifact/net.typedrest/typedrest)  
 The main TypedRest library.
 
-[typedrest-annotations](https://mvnrepository.com/artifact/com.oneandone/typedrest-annotations)  
-Annotations for data models to be used with TypedRest.
+[typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive)  
+Adds support for streaming with [ReactiveX (Rx)](http://reactivex.io/).  
+Create endpoints using the types in the `net.typedrest.endpoints.reactive` package.
 
-[typedrest-vaadin](https://mvnrepository.com/artifact/com.oneandone/typedrest-vaadin)  
-Build [Vaadin](https://vaadin.com/) GUIs for TypedRest clients.
+[typedrest-serializers-jackson](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-jackson)  
+Adds support for serializing using [Jackson](https://github.com/FasterXML/jackson) instead of [kotlinx.serialization](https://kotlinlang.org/docs/serialization.html).  
+Pass `new JacksonJsonSerializer()` to the `EntryEndpoint` constructor.
+
+[typedrest-serializers-moshi](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-moshi)  
+Adds support for serializing using [Moshi](https://github.com/square/moshi) instead of [kotlinx.serialization](https://kotlinlang.org/docs/serialization.html).  
+Pass `new MoshiJsonSerializer()` to the `EntryEndpoint` constructor.
 
 ## See also
 
