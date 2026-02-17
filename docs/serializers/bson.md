@@ -1,5 +1,7 @@
 # BSON
 
+BSON (Binary JSON) serialization is available in the .NET implementation of TypedRest.
+
 === "C#"
 
     The BSON serializer provides efficient binary serialization using [Newtonsoft.Json](https://www.newtonsoft.com/json)'s BSON support:
@@ -16,3 +18,7 @@
     - String enums with camel-case naming
     - Null values are not serialized
     - Automatic type name handling
+
+## Content type
+
+TODO: The serializer handles the `application/bson` content type.

@@ -101,3 +101,7 @@ JSON is the default serialization format in TypedRest.
         new URL("http://example.com/"),
         new MySerializer());
     ```
+
+## Content type
+
+TODO: TypedRest automatically handle custom media types that end with `+json` (e.g., `application/vnd.api+json`, `application/hal+json`). These are treated as JSON and deserialized using the configured JSON serializer.
