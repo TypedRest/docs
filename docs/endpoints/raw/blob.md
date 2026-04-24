@@ -77,7 +77,7 @@ Endpoint for a binary blob that can be downloaded or uploaded.
     const data = await avatar.download();
 
     // Upload from a file
-    const file = new File([data], "new-avatar.jpg", { type: "application/jpeg" });
+    const file = new File([data], "new-avatar.jpg", { type: "image/jpeg" });
     await avatar.uploadFrom(file);
 
     // Or upload from a stream
