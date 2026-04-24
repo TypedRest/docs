@@ -15,7 +15,7 @@ npm install typedrest --save
 Create an `EntryEndpoint` pointing at your API:
 
 ```typescript
-import {EntryEndpoint} from 'typedrest';
+import {EntryEndpoint} from 'typedrest.endpoints';
 
 const client = new EntryEndpoint(new URL("https://example.com/api/"));
 ```
@@ -25,7 +25,7 @@ const client = new EntryEndpoint(new URL("https://example.com/api/"));
 Extend `EntryEndpoint` and expose your API's resources as properties:
 
 ```typescript
-import {EntryEndpoint, CollectionEndpoint} from 'typedrest';
+import {EntryEndpoint, CollectionEndpoint} from 'typedrest.endpoints';
 
 class MyClient extends EntryEndpoint {
     get contacts() {
