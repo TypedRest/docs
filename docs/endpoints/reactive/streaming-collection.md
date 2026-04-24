@@ -2,6 +2,11 @@
 
 Endpoint for a collection of entities observable as an append-only stream using long-polling.
 
+!!! note
+    Reactive endpoints are not available for TypeScript.  
+    For .NET, use the [TypedRest.Reactive](https://www.nuget.org/packages/TypedRest.Reactive/) NuGet package.  
+    For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.
+
 
 | Method         | Input       | Result        | HTTP Verb | Description                                                                    |
 | -------------- | ----------- | ------------- | --------- | ------------------------------------------------------------------------------ |
@@ -31,7 +36,7 @@ Extends [Collection endpoint](../generic/collection.md)
     await messages.CreateAsync(new Message { Text = "Hello!" });
     ```
 
-    You can also configure `CollectionEndpoint` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
+    You can also configure `StreamingCollectionEndpoint` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
 
     ```csharp
     var messages = new StreamingCollectionEndpoint<Message, MessageEndpoint>(client, "messages");

@@ -2,6 +2,11 @@
 
 Endpoint for a resource that can be polled for state changes.
 
+!!! note
+    Reactive endpoints are not available for TypeScript.  
+    For .NET, use the [TypedRest.Reactive](https://www.nuget.org/packages/TypedRest.Reactive/) NuGet package.  
+    For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.
+
 | Method         | Input  | Result        | HTTP Verb | Description                                      |
 | -------------- | ------ | ------------- | --------- | ------------------------------------------------ |
 | Get observable | -      | Entity stream | `GET`     | Provides an observable stream of entity states.  |
