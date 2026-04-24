@@ -12,8 +12,8 @@ HAL adds a `_links` object to JSON responses containing links organized by relat
     "name": "John Doe",
     "_links": {
         "self": { "href": "/users/123" },
-        "orders": { "href":  "/users/123/orders" },
-        "search": { "href":  "/users/{id}", "templated": true }
+        "orders": { "href": "/users/123/orders" },
+        "search": { "href": "/users/{id}", "templated": true }
     }
 }
 ```
@@ -170,5 +170,5 @@ HAL links can be marked as [templates](uri-templates.md) with the `templated` pr
 
     ```typescript
     const findUri = endpoint.linkTemplate("find", { name: "John", email: "john@example.com" });
-    // Result: /users? name=John&email=john%40example.com
+    // Result: /users?name=John&email=john%40example.com
     ```

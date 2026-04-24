@@ -70,7 +70,6 @@ Extends [Collection endpoint](../generic/collection.md)
     val all = messages.readAll()
     messages.create(Message("Hello!"))
     ```
-    ```
 
     You can also use `GenericStreamingCollectionEndpointImpl` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
 

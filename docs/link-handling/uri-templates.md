@@ -6,7 +6,7 @@ TypedRest supports URI templates as defined in [RFC 6570](https://tools.ietf.org
 
 A URI template contains placeholders (variables) that are replaced with actual values at runtime. For example:
 
-- Template: `/users/{id}` with `{id:  "123"}` → `/users/123`
+- Template: `/users/{id}` with `{id: "123"}` → `/users/123`
 - Template: `/search{?q,limit}` with `{q: "test", limit: 10}` → `/search?q=test&limit=10`
 
 ## Server-provided templates

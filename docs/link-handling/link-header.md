@@ -1,6 +1,6 @@
 # HTTP Link header
 
-TypedRest can extract links from HTTP `Link` headers as defined in [RFC 8288](https://tools.ietf. org/html/rfc8288). This enables HATEOAS-style navigation where the server provides links to related resources in response headers.
+TypedRest can extract links from HTTP `Link` headers as defined in [RFC 8288](https://tools.ietf.org/html/rfc8288). This enables HATEOAS-style navigation where the server provides links to related resources in response headers.
 
 ## Header format
 

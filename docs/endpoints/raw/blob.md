@@ -16,7 +16,7 @@ Endpoint for a binary blob that can be downloaded or uploaded.
 
     // Download to a stream
     Stream data = await avatar.DownloadAsync();
-    
+
     // Or download to a file
     await avatar.DownloadAsync("avatar.jpg");
 
