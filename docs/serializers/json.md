@@ -34,11 +34,7 @@ JSON is the default serialization format in TypedRest.
 
     **System.Text.Json**
 
-    You can also use the [System.Text.Json](https://learn.microsoft.com/en-us/dotnet/api/system.text.json) serializer with the [TypedRest.SystemTextJson](https://www.nuget.org/packages/TypedRest.SystemTextJson) NuGet package:
-
-    !!! note
-        The `TypedRest.SystemTextJson` package version should match your main `TypedRest` package version. Both packages follow the same versioning scheme.
-
+    You can also use the [System.Text.Json](https://learn.microsoft.com/en-us/dotnet/api/system.text.json) serializer with the [TypedRest.SystemTextJson](https://www.nuget.org/packages/TypedRest.SystemTextJson) NuGet package.
     Default settings:
 
     - Web defaults (camel-case property naming)
@@ -76,28 +72,6 @@ JSON is the default serialization format in TypedRest.
     // Uses JsonSerializer by default
     ```
 
-    **Custom serializers**
+## Content type
 
-    You can implement the `Serializer` interface for custom serialization:
-
-    ```typescript
-    import { Serializer } from "typedrest";
-
-    class MySerializer implements Serializer {
-        readonly supportedMediaTypes = ["application/json"];
-
-        serialize<T>(entity: T): string {
-            // Custom serialization logic
-            return JSON.stringify(entity);
-        }
-
-        deserialize<T>(text: string): T {
-            // Custom deserialization logic
-            return JSON.parse(text) as T;
-        }
-    }
-
-    const endpoint = new EntryEndpoint(
-        new URL("http://example.com/"),
-        new MySerializer());
-    ```
+The serializer handles the `application/json` content type. TypedRest also automatically treats custom media types ending in `+json` (e.g., `application/vnd.api+json`, `application/hal+json`) as JSON and deserializes them using the configured JSON serializer.

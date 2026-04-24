@@ -3,3 +3,4 @@ nav:
   - json.md
   - bson.md
   - xml.md
+  - custom.md

@@ -2,13 +2,15 @@
 
 Serializers control how entities are serialized when sending requests and deserialized when receiving responses.
 
-TypedRest provides built-in serializers for various transport formats:
+TypedRest provides serializers for various transport formats:
 
-- [JSON](json.md)
-- [BSON](bson.md)
-- [XML](xml.md)
+| Format          | C#/.NET  | Java/Kotlin | TypeScript |
+| --------------- | -------- | ----------- | ---------- |
+| [JSON](json.md) | Built-in | Built-in    | Built-in   |
+| [XML](xml.md)   | Built-in | Built-in    |            |
+| [BSON](bson.md) | Built-in |             |            |
 
-You can also create and use custom serializers.
+You can also create and use [custom serializers](custom.md).
 
 ## Inheritance
 
