@@ -74,5 +74,5 @@ Extends [Collection endpoint](../generic/collection.md)
     You can also use `GenericStreamingCollectionEndpointImpl` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
 
     ```kotlin
-    val messages = GenericStreamingCollectionEndpoint(client, "messages", Message::class.java, ::MessageEndpoint)
+    val messages = GenericStreamingCollectionEndpointImpl(client, "messages", Message::class.java, ::MessageEndpoint)
     ```

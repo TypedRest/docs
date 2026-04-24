@@ -20,7 +20,7 @@ RPC endpoint that returns an entity as output when invoked.
 === "Java"
 
     ```java
-    ProducerEndpoint<Token> generator = new ProducerEndpoint<>(client, "generate-token", Token.class);
+    ProducerEndpoint<Token> generator = new ProducerEndpointImpl<>(client, "generate-token", Token.class);
 
     // Invoke and get output
     Token token = generator.invoke();
@@ -29,7 +29,7 @@ RPC endpoint that returns an entity as output when invoked.
 === "Kotlin"
 
     ```kotlin
-    val generator = ProducerEndpoint(client, "generate-token", Token::class.java)
+    val generator = ProducerEndpointImpl(client, "generate-token", Token::class.java)
 
     // Invoke and get output
     val token = generator.invoke()

@@ -66,7 +66,7 @@ Extends [Indexer endpoint](indexer.md)
     List<Contact> allContacts = contacts.readAll();
 
     // Read a range of entities
-    PartialResponse<Contact> someContacts = contacts.readRange(Range.ofLength(0, 50));
+    PartialResponse<Contact> someContacts = contacts.readRange(0L, 49L);
 
     // Create a new entity
     ElementEndpoint<Contact> newContact = contacts.create(new Contact("John Doe"));
@@ -108,7 +108,7 @@ Extends [Indexer endpoint](indexer.md)
     val allContacts = contacts.readAll()
 
     // Read a range of entities
-    val someContacts = contacts.readRange(Range.ofLength(0, 50))
+    val someContacts = contacts.readRange(0, 49)
 
     // Create a new entity
     val newContact = contacts.create(Contact("John Doe"))

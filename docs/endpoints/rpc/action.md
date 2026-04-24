@@ -20,7 +20,7 @@ RPC endpoint that is invoked with no input or output.
 === "Java"
 
     ```java
-    ActionEndpoint refresh = new ActionEndpoint(client, "refresh");
+    ActionEndpoint refresh = new ActionEndpointImpl(client, "refresh");
 
     // Invoke the action
     refresh.invoke();
@@ -29,7 +29,7 @@ RPC endpoint that is invoked with no input or output.
 === "Kotlin"
 
     ```kotlin
-    val refresh = ActionEndpoint(client, "refresh")
+    val refresh = ActionEndpointImpl(client, "refresh")
 
     // Invoke the action
     refresh.invoke()

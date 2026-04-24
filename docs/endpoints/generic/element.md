@@ -27,7 +27,7 @@ Endpoint for an individual resource.
     await contact.SetAsync(new Contact { Name = "Jane Doe", Email = "jane@example.com" });
 
     // Partially update the entity
-    await contact.MergeAsync(new { Email = "newemail@example.com" });
+    await contact.MergeAsync(new Contact { Email = "newemail@example.com" });
 
     // Delete the element
     await contact.DeleteAsync();
@@ -48,8 +48,9 @@ Endpoint for an individual resource.
     contact.set(new Contact("Jane Doe", "jane@example.com"));
 
     // Partially update the entity
-    Map<String, Object> updates = Map.of("email", "newemail@example.com");
-    contact.merge(updates);
+    Contact update = new Contact();
+    update.setEmail("newemail@example.com");
+    contact.merge(update);
 
     // Delete the element
     contact.delete();
@@ -70,7 +71,7 @@ Endpoint for an individual resource.
     contact.set(Contact("Jane Doe", "jane@example.com"))
 
     // Partially update the entity
-    contact.merge(mapOf("email" to "newemail@example.com"))
+    contact.merge(Contact(email = "newemail@example.com"))
 
     // Delete the element
     contact.delete()

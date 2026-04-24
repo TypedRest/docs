@@ -16,7 +16,7 @@ The most straightforward way to navigate between endpoints is using hard-coded r
 
     ```java
     EntryEndpoint client = new EntryEndpoint(URI.create("http://example.com/api/"));
-    CollectionEndpoint<Contact> contacts = new CollectionEndpoint<>(client, "contacts", Contact.class);
+    CollectionEndpoint<Contact> contacts = new CollectionEndpointImpl<>(client, "contacts", Contact.class);
     // Results in: http://example.com/api/contacts
     ```
 
@@ -24,7 +24,7 @@ The most straightforward way to navigate between endpoints is using hard-coded r
 
     ```kotlin
     val client = EntryEndpoint(URI.create("http://example.com/api/"))
-    val contacts = CollectionEndpoint(client, "contacts", Contact::class.java)
+    val contacts = CollectionEndpointImpl(client, "contacts", Contact::class.java)
     // Results in: http://example.com/api/contacts
     ```
 
@@ -64,30 +64,30 @@ This is often not the desired behavior. TypedRest provides a non-standard `./` p
 === "Java"
 
     ```java
-    ElementEndpoint<MyEntity> parent = new ElementEndpoint<>(client, "endpoint", MyEntity.class);
+    ElementEndpoint<MyEntity> parent = new ElementEndpointImpl<>(client, "endpoint", MyEntity.class);
     // parent.getUri() = http://example.com/endpoint
 
     // Without ./ prefix - replaces last segment
-    ActionEndpoint child1 = new ActionEndpoint(parent, "subresource");
+    ActionEndpoint child1 = new ActionEndpointImpl(parent, "subresource");
     // child1.getUri() = http://example.com/subresource
 
     // With ./ prefix - appends to path
-    ActionEndpoint child2 = new ActionEndpoint(parent, "./subresource");
+    ActionEndpoint child2 = new ActionEndpointImpl(parent, "./subresource");
     // child2.getUri() = http://example.com/endpoint/subresource
     ```
 
 === "Kotlin"
 
     ```kotlin
-    val parent = ElementEndpoint(client, "endpoint", MyEntity::class.java)
+    val parent = ElementEndpointImpl(client, "endpoint", MyEntity::class.java)
     // parent.uri = http://example.com/endpoint
 
     // Without ./ prefix - replaces last segment
-    val child1 = ActionEndpoint(parent, "subresource")
+    val child1 = ActionEndpointImpl(parent, "subresource")
     // child1.uri = http://example.com/subresource
 
     // With ./ prefix - appends to path
-    val child2 = ActionEndpoint(parent, "./subresource")
+    val child2 = ActionEndpointImpl(parent, "./subresource")
     // child2.uri = http://example.com/endpoint/subresource
     ```
 
