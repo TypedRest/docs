@@ -150,7 +150,7 @@ You can also register default links that will be used when the server doesn't pr
 
     ```typescript
     class MyEndpoint extends Endpoint {
-        constructor(referrer:  Endpoint, relativeUri: string) {
+        constructor(referrer: Endpoint, relativeUri: string) {
             super(referrer, relativeUri);
             this.setDefaultLink("related", "./related-resource");
         }
