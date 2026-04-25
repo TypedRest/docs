@@ -8,7 +8,7 @@ Implement the platform's `Serializer` interface (or appropriate base type):
 
 === "C#"
 
-    On .NET, TypedRest uses `MediaTypeFormatter` from the `System.Net.Http.Formatting` family. Derive from `MediaTypeFormatter` (or one of its specializations) and override the read/write methods.
+    TypedRest uses `MediaTypeFormatter` from the `System.Net.Http.Formatting` family. Derive from `MediaTypeFormatter` (or one of its specializations) and override the read/write methods.
 
     ```csharp
     using System.Net.Http.Formatting;
@@ -106,10 +106,10 @@ Implement the platform's `Serializer` interface (or appropriate base type):
 
 === "TypeScript"
 
-    Implement the `Serializer` interface from the `typedrest` package:
+    Implement the `Serializer` interface:
 
     ```typescript
-    import { Serializer } from "typedrest";
+    import { Serializer } from "typedrest/serializers";
 
     class MySerializer implements Serializer {
         readonly supportedMediaTypes = ["application/my-format"];

@@ -14,8 +14,7 @@ JSON is the default serialization format in TypedRest.
     - Automatic type name handling
 
     ```csharp
-    var endpoint = new EntryEndpoint(new Uri("http://example.com/"));
-    // Uses NewtonsoftJsonSerializer by default
+    var endpoint = new EntryEndpoint(new Uri("http://example.com/")); // Uses NewtonsoftJsonSerializer by default
     ```
 
     To customize the serializer settings:
@@ -63,13 +62,115 @@ JSON is the default serialization format in TypedRest.
         });
     ```
 
+=== "Java"
+
+    **kotlinx.serialization (Default)**
+
+    The default serializer uses [kotlinx.serialization](https://kotlinlang.org/docs/serialization.html). Entity classes are typically defined in Kotlin with the `@Serializable` annotation.
+
+    ```java
+    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/")); // Uses KotlinxJsonSerializer by default
+    ```
+
+    **Jackson**
+
+    For Java POJOs or more control over serialization, add the [typedrest-serializers-jackson](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-jackson) dependency and pass a `JacksonJsonSerializer`:
+
+    ```java
+    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), null, new JacksonJsonSerializer());
+    ```
+
+    To customize the `JsonMapper`:
+
+    ```java
+    JsonMapper mapper = JsonMapper.builder()
+        .addModule(new KotlinModule.Builder().build())
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .build();
+    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), null, new JacksonJsonSerializer(mapper));
+    ```
+
+    **Moshi**
+
+    Add the [typedrest-serializers-moshi](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-moshi) dependency and pass a `MoshiJsonSerializer`:
+
+    ```java
+    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), null, new MoshiJsonSerializer());
+    ```
+
+=== "Kotlin"
+
+    **kotlinx.serialization (Default)**
+
+    The default serializer uses [kotlinx.serialization](https://kotlinlang.org/docs/serialization.html). Annotate entity classes with `@Serializable`:
+
+    ```kotlin
+    import kotlinx.serialization.Serializable
+
+    @Serializable
+    data class Contact(val name: String)
+    ```
+
+    ```kotlin
+    val endpoint = EntryEndpoint(URI.create("http://example.com/")) // Uses KotlinxJsonSerializer by default
+    ```
+
+    **Jackson**
+
+    Add the [typedrest-serializers-jackson](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-jackson) dependency and pass a `JacksonJsonSerializer`:
+
+    ```kotlin
+    val endpoint = EntryEndpoint(
+        URI.create("http://example.com/"),
+        serializer = JacksonJsonSerializer()
+    )
+    ```
+
+    To customize the `JsonMapper`:
+
+    ```kotlin
+    val mapper = JsonMapper.builder()
+        .addModule(kotlinModule())
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .build()
+    val endpoint = EntryEndpoint(
+        URI.create("http://example.com/"),
+        serializer = JacksonJsonSerializer(mapper)
+    )
+    ```
+
+    **Moshi**
+
+    Add the [typedrest-serializers-moshi](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-moshi) dependency and pass a `MoshiJsonSerializer`:
+
+    ```kotlin
+    val endpoint = EntryEndpoint(
+        URI.create("http://example.com/"),
+        serializer = MoshiJsonSerializer()
+    )
+    ```
+
+    To customize the `Moshi` instance:
+
+    ```kotlin
+    val moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .add(Date::class.java, Rfc3339DateJsonAdapter())
+        .build()
+    val endpoint = EntryEndpoint(
+        URI.create("http://example.com/"),
+        serializer = MoshiJsonSerializer(moshi)
+    )
+    ```
+
 === "TypeScript"
 
-    TypeScript uses the native `JSON.stringify()` and `JSON.parse()` methods:
+    **Native JSON (Default)**
+
+    The default serializer uses the native `JSON.stringify()` and `JSON.parse()` methods.
 
     ```typescript
-    const endpoint = new EntryEndpoint(new URL("http://example.com/"));
-    // Uses JsonSerializer by default
+    const endpoint = new EntryEndpoint(new URL("http://example.com/")); // Uses JsonSerializer by default
     ```
 
 ## Content type
