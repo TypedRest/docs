@@ -121,6 +121,9 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
 [Error handling](error-handling/index.md)
 : How to handle API errors with TypedRest.
 
+[Testing](testing/index.md)
+: How to test TypedRest endpoint wrappers and mock endpoints in unit tests.
+
 [Link handling](link-handling/index.md)
 : How to handle relative URIs, link headers, HATEOS, etc. with TypedRest.
 
