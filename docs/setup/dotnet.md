@@ -15,7 +15,7 @@ dotnet add package TypedRest
 Create an `EntryEndpoint` pointing at your API:
 
 ```csharp
-using TypedRest;
+using TypedRest.Endpoints;
 
 var client = new EntryEndpoint(new Uri("https://example.com/api/"));
 ```
