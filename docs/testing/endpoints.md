@@ -6,8 +6,8 @@ To verify that your TypedRest endpoint configuration issues the correct HTTP req
 
     Install [RichardSzalay.MockHttp](https://github.com/richardszalay/mockhttp) to intercept `HttpClient` calls:
 
-    ```xml
-    <PackageReference Include="RichardSzalay.MockHttp" Version="*" />
+    ```
+    dotnet add package RichardSzalay.MockHttp
     ```
 
     Inject a `MockHttpMessageHandler` into `HttpClient` and pass it to your entry endpoint:
