@@ -19,18 +19,20 @@ When creating [endpoints](../endpoints/index.md), the serializer is automaticall
 === "C#"
 
     ```csharp
-    var client = new EntryEndpoint(new Uri("http://example.com/"));
-    client.Serializer = new SystemTextJsonSerializer();
+    var client = new EntryEndpoint(
+        new Uri("http://example.com/"),
+        serializer: new SystemTextJsonSerializer());
 
     var contacts = new CollectionEndpoint<Contact>(client, relativeUri: "./contacts");
-    // contacts.Serializer is automatically set to the same SystemTextJsonSerializer
+    // contacts uses the same SystemTextJsonSerializer
     ```
 
 === "TypeScript"
 
     ```typescript
-    const client = new EntryEndpoint(new URL("http://example.com/"));
-    client.serializer = new CustomSerializer();
+    const client = new EntryEndpoint(
+        new URL("http://example.com/"),
+        new CustomSerializer());
 
     const contacts = new CollectionEndpoint<Contact>(client, "./contacts");
     // contacts.serializer is automatically set to the same CustomSerializer
