@@ -153,6 +153,7 @@ Pass an instance of your serializer to the [entry endpoint](../endpoints/entry.m
     ```java
     EntryEndpoint endpoint = new EntryEndpoint(
         URI.create("http://example.com/"),
+        (HttpCredentials) null,
         new MySerializer());
     ```
 

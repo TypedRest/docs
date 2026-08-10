@@ -77,7 +77,7 @@ JSON is the default serialization format in TypedRest.
     For Java POJOs or more control over serialization, add the [typedrest-serializers-jackson](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-jackson) dependency and pass a `JacksonJsonSerializer`:
 
     ```java
-    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), null, new JacksonJsonSerializer());
+    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), (HttpCredentials) null, new JacksonJsonSerializer());
     ```
 
     To customize the `JsonMapper`:
@@ -87,7 +87,7 @@ JSON is the default serialization format in TypedRest.
         .addModule(new KotlinModule.Builder().build())
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         .build();
-    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), null, new JacksonJsonSerializer(mapper));
+    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), (HttpCredentials) null, new JacksonJsonSerializer(mapper));
     ```
 
     **Moshi**
@@ -95,7 +95,7 @@ JSON is the default serialization format in TypedRest.
     Add the [typedrest-serializers-moshi](https://central.sonatype.com/artifact/net.typedrest/typedrest-serializers-moshi) dependency and pass a `MoshiJsonSerializer`:
 
     ```java
-    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), null, new MoshiJsonSerializer());
+    EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/"), (HttpCredentials) null, new MoshiJsonSerializer());
     ```
 
 === "Kotlin"
