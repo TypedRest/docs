@@ -66,11 +66,17 @@ JSON is the default serialization format in TypedRest.
 
     **kotlinx.serialization (Default)**
 
-    The default serializer uses [kotlinx.serialization](https://kotlinlang.org/docs/serialization.html). Entity classes are typically defined in Kotlin with the `@Serializable` annotation.
+    The default serializer uses [kotlinx.serialization](https://kotlinlang.org/docs/serialization.html).
 
     ```java
     EntryEndpoint endpoint = new EntryEndpoint(URI.create("http://example.com/")); // Uses KotlinxJsonSerializer by default
     ```
+
+    !!! warning "Not usable with entities written in Java"
+
+        kotlinx.serialization generates its serializers with a Kotlin compiler plugin, so it only works for entity classes written in Kotlin and annotated with `@Serializable`. A Java class has no generated serializer, and deserializing one fails at runtime rather than at compile time.
+
+        If your entities are Java classes, pick Jackson or Moshi below. Both work by reflection and handle either language.
 
     **Jackson**
 
