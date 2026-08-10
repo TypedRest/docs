@@ -28,6 +28,7 @@ TypedRest provides a number of endpoint types modelling common REST patterns. Mo
 
 - [Polling endpoint](reactive/polling.md) - poll resource for state changes
 - [Streaming endpoint](reactive/streaming.md) - stream of entities via persistent connection
+- [SSE endpoint](reactive/sse.md) - stream of entities via Server-Sent Events
 - [Streaming Collection endpoint](reactive/streaming-collection.md) - collection of entities observable as append-only stream
 
 The constructors of all endpoints (except entry endpoints) take a `referrer` parameter. This is used to inherit [relative URI bases](../link-handling/index.md), [serializers](../serializers/index.md) and [error handling](../error-handling/index.md).

@@ -1,6 +1,6 @@
 # Streaming endpoint
 
-Endpoint for a stream of entities using a persistent HTTP connection.
+Endpoint for a stream of entities using a persistent HTTP connection. The entities the server writes into the open response body are split on a configurable separator, `\n` by default. If the server speaks the Server-Sent Events protocol instead, use the [SSE endpoint](sse.md).
 
 !!! note
     Reactive endpoints are not available for TypeScript.  
