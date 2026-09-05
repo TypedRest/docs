@@ -7,8 +7,8 @@ TypedRest provides serializers for various transport formats:
 | Format          | C#/.NET  | Java/Kotlin | TypeScript |
 | --------------- | -------- | ----------- | ---------- |
 | [JSON](json.md) | Built-in | Built-in    | Built-in   |
-| [XML](xml.md)   | Built-in | Built-in    |            |
-| [BSON](bson.md) | Built-in |             |            |
+| [XML](xml.md)   | Built-in | Add-on      | -          |
+| [BSON](bson.md) | Built-in | -           | -          |
 
 You can also create and use [custom serializers](custom.md).
 

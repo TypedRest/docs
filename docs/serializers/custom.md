@@ -30,7 +30,7 @@ Implement the platform's `Serializer` interface (or appropriate base type):
 
 === "Java"
 
-    Implement the `net.typedrest.serializers.Serializer` interface or derive from `AbstractJsonSerializer` for JSON-based formats:
+    Implement the `net.typedrest.serializers.Serializer` interface, or derive from `AbstractJsonSerializer`/`AbstractXmlSerializer` for JSON-/XML-based formats:
 
     ```java
     import net.typedrest.serializers.Serializer;
@@ -75,7 +75,7 @@ Implement the platform's `Serializer` interface (or appropriate base type):
 
 === "Kotlin"
 
-    Implement the `net.typedrest.serializers.Serializer` interface or derive from `AbstractJsonSerializer` for JSON-based formats:
+    Implement the `net.typedrest.serializers.Serializer` interface, or derive from `AbstractJsonSerializer`/`AbstractXmlSerializer` for JSON-/XML-based formats:
 
     ```kotlin
     import net.typedrest.serializers.Serializer
