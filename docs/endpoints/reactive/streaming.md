@@ -7,9 +7,9 @@ Endpoint for a stream of entities using a persistent HTTP connection. The entiti
     For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.  
     For TypeScript, reactive endpoints are part of the main `typedrest` package and provide `AsyncIterable`s via `stream()` instead of observables.
 
-| Method         | Input | Result        | HTTP Verb | Description                                |
-| -------------- | ----- | ------------- | --------- | ------------------------------------------ |
-| Get observable | -     | Entity stream | `GET`     | Provides an observable stream of entities. |
+| Method     | Input | Result        | HTTP Verb | Description                    |
+| ---------- | ----- | ------------- | --------- | ------------------------------ |
+| Get stream | -     | Entity stream | `GET`     | Provides a stream of entities. |
 
 ## Usage
 

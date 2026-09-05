@@ -7,9 +7,9 @@ Endpoint for a stream of entities using [Server-Sent Events](https://developer.m
     For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.  
     For TypeScript, reactive endpoints are part of the main `typedrest` package and provide `AsyncIterable`s via `stream()` instead of observables.
 
-| Method         | Input | Result        | HTTP Verb | Description                                |
-| -------------- | ----- | ------------- | --------- | ------------------------------------------ |
-| Get observable | -     | Entity stream | `GET`     | Provides an observable stream of entities. |
+| Method     | Input | Result        | HTTP Verb | Description                    |
+| ---------- | ----- | ------------- | --------- | ------------------------------ |
+| Get stream | -     | Entity stream | `GET`     | Provides a stream of entities. |
 
 The request is sent with `Accept: text/event-stream`. The `data:` field of each event is deserialized as an entity. Unlike the [Streaming endpoint](streaming.md), which simply splits the response body on a separator, this understands the SSE wire format, so it can also make use of the event type, id and reconnection interval the server sends along.
 
