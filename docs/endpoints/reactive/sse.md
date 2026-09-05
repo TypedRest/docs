@@ -3,9 +3,9 @@
 Endpoint for a stream of entities using [Server-Sent Events](https://developer.mozilla.org/docs/Web/API/Server-sent_events) (SSE).
 
 !!! note
-    Reactive endpoints are not available for TypeScript.  
     For .NET, use the [TypedRest.Reactive](https://www.nuget.org/packages/TypedRest.Reactive/) NuGet package.  
-    For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.
+    For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.  
+    For TypeScript, reactive endpoints are part of the main `typedrest` package and provide `AsyncIterable`s via `stream()` instead of observables.
 
 | Method         | Input | Result        | HTTP Verb | Description                                |
 | -------------- | ----- | ------------- | --------- | ------------------------------------------ |
@@ -45,6 +45,17 @@ The request is sent with `Accept: text/event-stream`. The `data:` field of each 
     stream.subscribe { x -> println("Event: ${x.type} - ${x.message}") }
     ```
 
+=== "TypeScript"
+
+    ```typescript
+    const events = new SseStreamingEndpoint<Event>(client, "events");
+
+    // Consume the stream
+    for await (const x of events.stream()) {
+        console.log(`Event: ${x.type} - ${x.message}`);
+    }
+    ```
+
 ## Event types
 
 A server can label events with an `event:` field to send more than one kind of message over a single stream. Pass an event type to the constructor to receive only those events; all others are ignored. Leave it unset to receive every event, whatever its type.
@@ -67,15 +78,21 @@ A server can label events with an `event:` field to send more than one kind of m
     val updates = SseStreamingEndpointImpl(client, "jobs/events", Job::class.java, eventType = "update")
     ```
 
+=== "TypeScript"
+
+    ```typescript
+    const updates = new SseStreamingEndpoint<Job>(client, "jobs/events", "update");
+    ```
+
 ## Reconnecting
 
-Long-lived streams can get interrupted. By default the endpoint reconnects on its own after a dropped connection, a transient transport error or a `5xx` response, without the subscriber seeing anything.
+Long-lived streams can get interrupted. By default the endpoint reconnects on its own after a dropped connection, a transient transport error or a `5xx` response, without the consumer seeing anything.
 
 Two SSE fields steer this. A `retry:` field tells the client how long to wait before reconnecting; until the server sends one, the endpoint waits three seconds. An `id:` field is remembered and sent back as a `Last-Event-ID` header on the next attempt, so a server that supports it can resume where the stream left off rather than starting over.
 
-To end a stream for good, respond with `204 No Content`. The observable then completes instead of reconnecting.
+To end a stream for good, respond with `204 No Content`. The stream then completes instead of reconnecting.
 
-Turn reconnecting off to have connection failures surface as errors on the observable instead:
+Turn reconnecting off to have connection failures surface as errors instead:
 
 === "C#"
 
@@ -98,4 +115,11 @@ Turn reconnecting off to have connection failures surface as errors on the obser
     ```kotlin
     val events = SseStreamingEndpointImpl(client, "events", Event::class.java)
         .apply { autoReconnect = false }
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    const events = new SseStreamingEndpoint<Event>(client, "events");
+    events.autoReconnect = false;
     ```

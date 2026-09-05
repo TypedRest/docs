@@ -149,6 +149,9 @@ Extends [Indexer endpoint](indexer.md)
     // Read all entities in the collection
     const allContacts = await contacts.readAll();
 
+    // Read a range of entities
+    const someContacts = await contacts.readRange(0, 49);
+
     // Create a new entity
     const newContact = await contacts.create({ name: "John Doe" });
 

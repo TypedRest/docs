@@ -3,9 +3,9 @@
 Endpoint for a collection of entities observable as an append-only stream using long-polling.
 
 !!! note
-    Reactive endpoints are not available for TypeScript.  
     For .NET, use the [TypedRest.Reactive](https://www.nuget.org/packages/TypedRest.Reactive/) NuGet package.  
-    For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.
+    For Java/Kotlin, use the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact.  
+    For TypeScript, reactive endpoints are part of the main `typedrest` package and provide `AsyncIterable`s via `stream()` instead of observables.
 
 
 | Method         | Input       | Result        | HTTP Verb | Description                                                                    |
@@ -80,4 +80,35 @@ Extends [Collection endpoint](../generic/collection.md)
 
     ```kotlin
     val messages = GenericStreamingCollectionEndpointImpl(client, "messages", Message::class.java, ::MessageEndpoint)
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    const messages = new StreamingCollectionEndpoint<Message>(client, "messages");
+
+    // Use as regular collection endpoint
+    const all = await messages.readAll();
+    await messages.create({ text: "Hello!" });
+
+    // Consume new messages
+    for await (const x of messages.stream()) {
+        console.log(`New message: ${x.text}`);
+    }
+    ```
+
+    Pass a start index to `stream()` to skip elements you have already seen, or a negative one to start with the last few:
+
+    ```typescript
+    // Start after the first 10 elements
+    messages.stream(10);
+
+    // Start with the last 5 elements
+    messages.stream(-5);
+    ```
+
+    You can also use `GenericStreamingCollectionEndpoint` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
+
+    ```typescript
+    const messages = new GenericStreamingCollectionEndpoint<Message, MessageEndpoint>(client, "messages", MessageEndpoint);
     ```
