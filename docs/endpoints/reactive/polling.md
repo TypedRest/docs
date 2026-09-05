@@ -23,10 +23,13 @@ Extends [Element endpoint](../generic/element.md)
 === "C#"
 
     ```csharp
-    var status = new PollingEndpoint<Status>(client, "status");
+    var status = new PollingEndpoint<Status>(client, "status")
+    {
+        PollingInterval = TimeSpan.FromSeconds(5)
+    };
 
     // Poll for state changes
-    IObservable<Status> stream = status.GetObservable(TimeSpan.FromSeconds(5));
+    IObservable<Status> stream = status.GetObservable();
     stream.Subscribe(x => Console.WriteLine($"Status: {x.State}"));
 
     // Use as regular element endpoint
@@ -38,9 +41,10 @@ Extends [Element endpoint](../generic/element.md)
 
     ```java
     PollingEndpoint<Status> status = new PollingEndpointImpl<>(client, "status", Status.class);
+    status.setPollingInterval(Duration.ofSeconds(5));
 
     // Poll for state changes
-    Observable<Status> stream = status.getObservable(Duration.ofSeconds(5));
+    Observable<Status> stream = status.getObservable();
     stream.subscribe(x -> System.out.println("Status: " + x.getState()));
 
     // Use as regular element endpoint
@@ -52,9 +56,10 @@ Extends [Element endpoint](../generic/element.md)
 
     ```kotlin
     val status = PollingEndpointImpl(client, "status", Status::class.java)
+        .apply { pollingInterval = Duration.ofSeconds(5) }
 
     // Poll for state changes
-    val stream = status.getObservable(Duration.ofSeconds(5))
+    val stream = status.getObservable()
     stream.subscribe { x -> println("Status: ${x.state}") }
 
     // Use as regular element endpoint
