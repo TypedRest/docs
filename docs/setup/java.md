@@ -135,3 +135,4 @@ Pass `new MoshiJsonSerializer()` to the `EntryEndpoint` constructor.
 
 - [API documentation](https://java.typedrest.net/)
 - [GitHub repository](https://github.com/TypedRest/TypedRest-Java)
+- [Sample project (Kotlin)](https://github.com/TypedRest/Sample-Kotlin)

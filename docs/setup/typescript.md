@@ -62,3 +62,4 @@ const contact: Contact = await newContact.read();
 
 - [API documentation](https://typescript.typedrest.net/)
 - [GitHub repository](https://github.com/TypedRest/TypedRest-TypeScript)
+- [Sample project](https://github.com/TypedRest/Sample-TypeScript)
