@@ -40,7 +40,7 @@ Endpoint for a binary blob that can be downloaded or uploaded.
     avatar.download("avatar.jpg");
 
     // Upload from a file
-    avatar.uploadFrom("new-avatar.jpg");
+    avatar.uploadFrom("new-avatar.jpg", null); // no MIME type
 
     // Or upload from a stream
     try (InputStream fileStream = new FileInputStream("new-avatar.jpg")) {

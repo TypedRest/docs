@@ -40,7 +40,7 @@ Extends [Element endpoint](../generic/element.md)
 === "Java"
 
     ```java
-    PollingEndpoint<Status> status = new PollingEndpointImpl<>(client, "status", Status.class);
+    PollingEndpoint<Status> status = new PollingEndpointImpl<>(client, "status", Status.class, null); // no end condition
     status.setPollingInterval(Duration.ofSeconds(5));
 
     // Poll for state changes

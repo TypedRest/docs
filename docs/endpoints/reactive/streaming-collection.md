@@ -48,7 +48,7 @@ Extends [Collection endpoint](../generic/collection.md)
     StreamingCollectionEndpoint<Message> messages = new StreamingCollectionEndpointImpl<>(client, "messages", Message.class);
 
     // Subscribe to new messages
-    Observable<Message> stream = messages.getObservable();
+    Observable<Message> stream = messages.getObservable(0); // start index
     stream.subscribe(x -> System.out.println("New message: " + x.getText()));
 
     // Use as regular collection endpoint

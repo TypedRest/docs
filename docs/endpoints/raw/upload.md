@@ -24,14 +24,14 @@ Endpoint that accepts binary uploads.
 === "Java"
 
     ```java
-    UploadEndpoint attachments = new UploadEndpointImpl(client, "issues/456/attachments");
+    UploadEndpoint attachments = new UploadEndpointImpl(client, "issues/456/attachments", null); // raw body, no form field
 
     // Upload from a file
-    attachments.uploadFrom("document.pdf");
+    attachments.uploadFrom("document.pdf", null); // no MIME type
 
     // Or upload from a stream
     try (InputStream fileStream = new FileInputStream("document.pdf")) {
-        attachments.uploadFrom(fileStream, "application/pdf");
+        attachments.uploadFrom(fileStream, "document.pdf", "application/pdf");
     }
     ```
 

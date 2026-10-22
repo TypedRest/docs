@@ -26,7 +26,7 @@ Endpoint for a stream of entities using a persistent HTTP connection. The entiti
 === "Java"
 
     ```java
-    StreamingEndpoint<Event> events = new StreamingEndpointImpl<>(client, "events", Event.class);
+    StreamingEndpoint<Event> events = new StreamingEndpointImpl<>(client, "events", Event.class, "\n");
 
     // Subscribe to the stream
     Observable<Event> stream = events.getObservable();

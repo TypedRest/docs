@@ -28,7 +28,7 @@ The request is sent with `Accept: text/event-stream`. The `data:` field of each 
 === "Java"
 
     ```java
-    StreamingEndpoint<Event> events = new SseStreamingEndpointImpl<>(client, "events", Event.class);
+    StreamingEndpoint<Event> events = new SseStreamingEndpointImpl<>(client, "events", Event.class, null); // all event types
 
     // Subscribe to the stream
     Observable<Event> stream = events.getObservable();
@@ -106,7 +106,7 @@ Turn reconnecting off to have connection failures surface as errors instead:
 === "Java"
 
     ```java
-    SseStreamingEndpointImpl<Event> events = new SseStreamingEndpointImpl<>(client, "events", Event.class);
+    SseStreamingEndpointImpl<Event> events = new SseStreamingEndpointImpl<>(client, "events", Event.class, null);
     events.setAutoReconnect(false);
     ```
 
