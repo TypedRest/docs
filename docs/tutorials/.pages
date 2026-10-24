@@ -1,0 +1,12 @@
+title: Tutorials
+nav:
+  - index.md
+  - first-client.md
+  - from-openapi.md
+  - authentication.md
+  - dependency-injection.md
+  - command-line.md
+  - concurrency.md
+  - paging.md
+  - live-updates.md
+  - testing.md

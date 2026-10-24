@@ -2,6 +2,7 @@ nav:
   - index.md
   - introduction.md
   - setup
+  - tutorials
   - endpoints
   - serializers
   - link-handling

@@ -112,6 +112,9 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
 [Setup](setup/index.md)
 : How do I use TypedRest in my projects?
 
+[Tutorials](tutorials/index.md)
+: Step-by-step guides for building, generating, securing and testing clients.
+
 [Endpoints](endpoints/index.md)
 : Documentation for all endpoint types provided by TypedRest.
 
