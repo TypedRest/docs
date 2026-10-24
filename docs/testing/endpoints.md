@@ -2,6 +2,10 @@
 
 To verify that your TypedRest endpoint configuration issues the correct HTTP requests and correctly deserializes responses, use a mock HTTP server. This lets you write fast, deterministic tests without a running API server.
 
+Most of what an endpoint does comes from TypedRest and is tested there. What is specific to your client is its structure: does each child endpoint point to the right URI and use the right endpoint type? One test per child endpoint is usually enough. You don't need to test every method of every endpoint.
+
+## Verifying requests
+
 === "C#"
 
     Install [RichardSzalay.MockHttp](https://github.com/richardszalay/mockhttp) to intercept `HttpClient` calls:
@@ -43,7 +47,7 @@ To verify that your TypedRest endpoint configuration issues the correct HTTP req
     ```java
     MockWebServer server = new MockWebServer();
 
-    EntryEndpoint client = new EntryEndpoint(URI.create(server.url("/").toString()));
+    EntryEndpoint client = new EntryEndpoint(server.url("/").uri(), (HttpCredentials) null, new JacksonJsonSerializer());
     ElementEndpoint<Contact> endpoint = new ElementEndpointImpl<>(client, "contacts/1", Contact.class);
 
     server.enqueue(new MockResponse()
@@ -130,7 +134,7 @@ To verify that your TypedRest endpoint configuration issues the correct HTTP req
     beforeEach(() => fetchMock.resetMocks());
 
     test('read contact', async () => {
-        const client = new EntryEndpoint('http://localhost/');
+        const client = new EntryEndpoint(new URL('http://localhost/'));
         const endpoint = new ElementEndpoint<Contact>(client, 'contacts/1');
 
         fetchMock.mockOnceIf(
@@ -159,3 +163,46 @@ To verify that your TypedRest endpoint configuration issues the correct HTTP req
         await endpoint.set({ name: 'Smith' });
     });
     ```
+
+## Testing error responses
+
+A mock server is also the easiest way to produce error responses that are hard to cause with a real API. Respond with an error status and check that TypedRest [maps it](../error-handling/index.md) to the expected exception:
+
+=== "C#"
+
+    ```csharp
+    mock.Expect(HttpMethod.Get, "http://localhost/contacts/1")
+        .Respond(HttpStatusCode.NotFound);
+
+    await Assert.ThrowsAsync<KeyNotFoundException>(() => endpoint.ReadAsync());
+    ```
+
+=== "Java"
+
+    ```java
+    server.enqueue(new MockResponse().setResponseCode(404));
+
+    assertThrows(NotFoundException.class, endpoint::read);
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    server.enqueue(MockResponse().setResponseCode(404))
+
+    assertThrows<NotFoundException> { endpoint.read() }
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { NotFoundError } from 'typedrest/errors';
+
+    test('contact not found', async () => {
+        fetchMock.mockOnceIf('http://localhost/contacts/1', '', { status: 404 });
+
+        await expect(endpoint.read()).rejects.toBeInstanceOf(NotFoundError);
+    });
+    ```
+
+The same approach tests how your application reacts to `401`, `403` or `500` responses, or to a `412 Precondition Failed` after a write with an outdated ETag (see [Optimistic concurrency](../tutorials/concurrency.md)).
