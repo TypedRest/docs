@@ -32,6 +32,8 @@ dotnet tool install -g typedrest-codegen
 
     The generated code derives from [TypedRest for the JVM](https://github.com/TypedRest/TypedRest-Java), so add the `net.typedrest:typedrest` and `net.typedrest:typedrest-serializers-jackson` dependencies to the consuming project.
 
+    Generated Java DTOs are plain classes with public fields, a no-argument constructor and one that sets all fields. They are placed in a `dtos` subpackage of the endpoints unless you choose another one with `--dto-namespace`.
+
     Generated Java DTOs carry JSpecify `@Nullable` annotations for optional properties, so that Kotlin consumers get real null safety instead of platform types. Add `org.jspecify:jspecify`, or turn the annotations off.
 
     Add `net.typedrest:typedrest-reactive` if the document asks for any [polling or streaming](custom-code.md) endpoints.

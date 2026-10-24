@@ -58,11 +58,78 @@ Every endpoint takes `kind`, `uri`, `description` and `children`. Some kinds tak
 
 The reactive kinds are never inferred, since an OpenAPI document does not describe the difference between a regular and a streaming response. Annotating the document is the only way to get them.
 
+Because the generator uses the extension as-is, **paths you add to the document later are not picked up automatically**. Add them to `x-typedrest` by hand as well, or remove the extension, rerun `pattern` and reapply your edits.
+
 ## 2. Extend the generated code
 
-In C#, all generated classes and interfaces are `partial`. Adding the methods you need for special cases in a separate file of the same namespace usually beats fighting the generator.
+Generated code is overwritten whenever it is regenerated, so do not edit it. Add to it instead. Adding the methods you need for special cases usually beats fighting the generator.
 
-In TypeScript, derive from the generated class and use your subclass in place of the generated one.
+=== "C#"
+
+    All generated classes and interfaces are `partial`. Add a file of your own in the same namespace:
+
+    ```csharp
+    namespace MyCompany.MyService;
+
+    public partial class ContactElementEndpoint
+    {
+        public Task<Contact?> RenameAsync(string name, CancellationToken cancellationToken = default)
+            => UpdateAsync(contact => contact.Name = name, cancellationToken: cancellationToken);
+    }
+    ```
+
+    If you generate interfaces and want the method on `IContactElementEndpoint` too, add a `partial interface` declaration the same way.
+
+    A partial class cannot change a constructor that has already been generated. If the entry endpoint needs a custom error handler or default headers, turn off its generated constructor (`GenerateEntryConstructor="false"` for the [source generator](source-generator.md), `--generate-entry-constructor false` for the [command-line tool](cli.md)) and write your own in a partial class.
+
+=== "Java"
+
+    Derive from the generated class (the `Impl` class if you generate interfaces):
+
+    ```java
+    public class MyClient extends MyServiceClient {
+        public MyClient(URI uri) {
+            super(uri);
+        }
+
+        public List<Contact> findByName(String name) {
+            return getContacts().readAll().stream()
+                .filter(x -> name.equals(x.name))
+                .collect(Collectors.toList());
+        }
+    }
+    ```
+
+=== "Kotlin"
+
+    Generated endpoints are `open class`es, so you can derive from them (the `Impl` class if you generate interfaces):
+
+    ```kotlin
+    class MyClient(uri: URI) : MyServiceClient(uri) {
+        fun findByName(name: String): List<Contact> =
+            contacts.readAll().filter { it.name == name }
+    }
+    ```
+
+    For small additions, an extension function works without subclassing, and on child endpoints too:
+
+    ```kotlin
+    fun MyServiceClient.findByName(name: String) = contacts.readAll().filter { it.name == name }
+    ```
+
+=== "TypeScript"
+
+    Derive from the generated class:
+
+    ```typescript
+    export class MyClient extends MyServiceClient {
+        async findByName(name: string) {
+            return (await this.contacts.readAll()).filter(x => x.name === name);
+        }
+    }
+    ```
+
+When you derive from a generated class, use your subclass in place of the generated one. The generated code still creates child endpoints as the generated types, so subclassing is mostly useful for the entry endpoint. Put helpers for child endpoints on your entry endpoint subclass, or use partial classes (C#) or extension functions (Kotlin).
 
 ## 3. Build your own tool
 

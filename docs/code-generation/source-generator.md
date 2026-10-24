@@ -13,6 +13,8 @@ dotnet add package TypedRest.SourceGenerator # generates source code on build
 dotnet add package TypedRest # library that the generated code depends on
 ```
 
+Also add `TypedRest.Reactive` if the document asks for any [polling or streaming](custom-code.md) endpoints, and `TypedRest.SystemTextJson` if you [choose that serializer](#choosing-a-serializer).
+
 ### Reference the spec file
 
 Add the OpenAPI/Swagger document to your project file as a `TypedRestOpenApi` item:

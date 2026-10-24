@@ -14,6 +14,11 @@ It can generate C#, Java, Kotlin and TypeScript clients.
 
 Both use the same inference, so they infer the same endpoints from the same spec.
 
+They differ in how the client stays in sync with the spec:
+
+- With the source generator, a changed spec takes effect on the next build.
+- With the command-line tool, rerun `generate` whenever the spec changes, for example in a build script, and check in the result.
+
 ## How inference works
 
 The paths in the document are arranged into a tree, with URI template placeholders such as `/contacts/{id}` collapsed into a single wildcard node. Each node is then matched against a list of patterns. The first pattern that matches wins:
