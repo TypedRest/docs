@@ -1,6 +1,8 @@
 # Streaming endpoint
 
-Endpoint for a stream of entities using a persistent HTTP connection. The entities the server writes into the open response body are split on a configurable separator, `\n` by default. If the server speaks the Server-Sent Events protocol instead, use the [SSE endpoint](sse.md).
+Endpoint for a stream of entities using a persistent HTTP connection. The entities the server writes into the open response body are split on a configurable separator, `\n` by default, as in newline-delimited JSON. If the server speaks the Server-Sent Events protocol instead, use the [SSE endpoint](sse.md).
+
+Unlike the SSE endpoint, this has no event types, event IDs or automatic reconnecting. Proxies and load balancers may buffer responses or close idle connections, so disable response buffering for the stream on the server side.
 
 !!! note
     For .NET, use the [TypedRest.Reactive](https://www.nuget.org/packages/TypedRest.Reactive/) NuGet package.  

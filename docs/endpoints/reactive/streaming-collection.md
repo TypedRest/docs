@@ -97,7 +97,47 @@ Extends [Collection endpoint](../generic/collection.md)
     }
     ```
 
-    Pass a start index to `stream()` to skip elements you have already seen, or a negative one to start with the last few:
+    You can also use `GenericStreamingCollectionEndpoint` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
+
+    ```typescript
+    const messages = new GenericStreamingCollectionEndpoint<Message, MessageEndpoint>(client, "messages", MessageEndpoint);
+    ```
+
+## Start index
+
+Pass a start index to skip elements you have already seen, which lets a client resume where it left off, or a negative one to start with the last few. Zero, the default, starts with the first element.
+
+=== "C#"
+
+    ```csharp
+    // Start after the first 10 elements
+    messages.GetObservable(startIndex: 10);
+
+    // Start with the last 5 elements
+    messages.GetObservable(startIndex: -5);
+    ```
+
+=== "Java"
+
+    ```java
+    // Start after the first 10 elements
+    messages.getObservable(10);
+
+    // Start with the last 5 elements
+    messages.getObservable(-5);
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    // Start after the first 10 elements
+    messages.getObservable(10)
+
+    // Start with the last 5 elements
+    messages.getObservable(-5)
+    ```
+
+=== "TypeScript"
 
     ```typescript
     // Start after the first 10 elements
@@ -107,8 +147,15 @@ Extends [Collection endpoint](../generic/collection.md)
     messages.stream(-5);
     ```
 
-    You can also use `GenericStreamingCollectionEndpoint` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
+## Server requirements
 
-    ```typescript
-    const messages = new GenericStreamingCollectionEndpoint<Message, MessageEndpoint>(client, "messages", MessageEndpoint);
-    ```
+The endpoint uses the same HTTP range requests as [reading a range](../generic/collection.md) of a regular collection, so the server has to support them:
+
+1. The client requests `Range: elements=N-`, from the next position it has not seen to the end (or `Range: elements=-N` for the last `N` elements).
+2. If there are elements from `N` on, the server responds with `206 Partial Content`, the elements, and `Content-Range: elements N-M/*`. The client waits for the polling interval and asks for the elements after `M`.
+3. If there are none yet, the server responds with `416 Range Not Satisfiable`. The client waits for the polling interval and asks again.
+
+!!! warning "Leave out the total"
+    Use `*` for the total in `Content-Range`, as above. If the server sends a total (`elements 0-9/10`) and the response reaches it, the client takes that as the end of the collection and the stream completes.
+
+The polling interval is 3 seconds by default. Change it with `PollingInterval`/`pollingInterval` (a `TimeSpan` in .NET, a `Duration` in Java/Kotlin, milliseconds in TypeScript). If a response has a `Retry-After` header, the endpoint uses it as the new polling interval.

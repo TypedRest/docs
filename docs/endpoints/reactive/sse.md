@@ -123,3 +123,16 @@ Turn reconnecting off to have connection failures surface as errors instead:
     const events = new SseStreamingEndpoint<Event>(client, "events");
     events.autoReconnect = false;
     ```
+
+## Server requirements
+
+The server responds with `Content-Type: text/event-stream` and writes events into the open response as they happen:
+
+```
+id: 17
+event: updated
+data: {"type":"updated","contact":{"id":"1337","name":"Smith"}}
+
+```
+
+Proxies and load balancers may buffer responses or close idle connections. Disable response buffering for `text/event-stream` on the server side; the endpoint takes care of reconnecting.
