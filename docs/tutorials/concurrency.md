@@ -112,10 +112,8 @@ The example below plays both Alice and Bob, using two endpoint objects for the s
     }
     ```
 
-In .NET and Java/Kotlin the same exception type is also used for `409 Conflict`. In Java/Kotlin you can tell them apart by the exception's `status`. In .NET, derive from `DefaultErrorHandler` and override `MapException` if you need a separate exception type for `412`, then pass your handler to the entry endpoint's constructor.
-
 !!! warning "Keep the endpoint object"
-    The ETag is stored in the endpoint object that did the read. This sends **no** `If-Match`:
+    The ETag is stored in the endpoint object that did the read. This would send **no** `If-Match`:
 
     ```csharp
     var contact = await client.Contacts["1337"].ReadAsync();
@@ -125,7 +123,7 @@ In .NET and Java/Kotlin the same exception type is also used for `409 Conflict`.
 
     Keep the endpoint in a variable for the whole read-modify-write cycle, as in the examples above.
 
-    Every set or delete clears the stored response before sending its request. After catching the `412` above, `bob` therefore has no ETag left: calling `bob.SetAsync(bobCopy)` again would send no `If-Match` and overwrite Alice's change after all. Always read again before the next set, or use `update` as described below.
+    Every set or delete clears the stored response before sending its request. After catching the `412` above, `bob` therefore has no ETag left: calling `bob.SetAsync(bobCopy)` again would send no `If-Match` and overwrite Alice's change after all.
 
 ## Retrying automatically
 
@@ -170,7 +168,7 @@ The change you pass in may run more than once, so it must only depend on the ent
 
 If all retries fail, the last exception is thrown.
 
-### JSON Patch (.NET only)
+### JSON Patch
 
 .NET also offers an `UpdateAsync` overload that takes a [JSON Patch](https://jsonpatch.com/) document. It sends only the change, as a `PATCH` request with the content type `application/json-patch+json`, so there is no stale copy that could overwrite someone else's change:
 
