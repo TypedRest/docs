@@ -43,7 +43,7 @@ Run the service inside the test process and point the client at it. Replace the 
     }
     ```
 
-    `IContactsService` stands for whatever the service's controllers depend on. If the service uses top-level statements, add `public partial class Program;` to it so the test can reference `Program`.
+    `IContactsService` stands for whatever the service's controllers depend on.
 
     [Sample-DotNet](https://github.com/TypedRest/Sample-DotNet) has a complete set of tests like this, using `TestServer` directly.
 
