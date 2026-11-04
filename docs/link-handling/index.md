@@ -24,6 +24,8 @@ All endpoints provide methods for resolving links:
     Uri LinkTemplate(string rel, IDictionary<string, object> variables);
     ```
 
+    These methods use cached data from the last response. On cache miss, they perform a lazy lookup using HTTP `HEAD`.
+
 === "Java"
 
     ```java
@@ -36,6 +38,8 @@ All endpoints provide methods for resolving links:
     // Resolves a link template with a specific relation type.
     URI linkTemplate(String rel, Map<String, Object> variables);
     ```
+
+    These methods use cached data from the last response. On cache miss, they perform a lazy lookup using HTTP `HEAD`.
 
 === "Kotlin"
 
@@ -50,6 +54,8 @@ All endpoints provide methods for resolving links:
     fun linkTemplate(rel: String, variables: Map<String, Any>): URI
     ```
 
+    These methods use cached data from the last response. On cache miss, they perform a lazy lookup using HTTP `HEAD`.
+
 === "TypeScript"
 
     ```typescript
@@ -63,4 +69,4 @@ All endpoints provide methods for resolving links:
     linkTemplate(rel: string, variables: { [key: string]: any; }): URL;
     ```
 
-These methods use cached data from the last response. On cache miss, they perform a lazy lookup using HTTP `HEAD`.
+    These methods use cached data from the last response. They throw a `NotFoundError` on a cache miss, so send a request to the endpoint first.
