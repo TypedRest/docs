@@ -22,9 +22,9 @@ PUT /contacts/1337, If-Match: "v7"  (Bob)         →  412 Precondition Failed
 
 The exception for `412 Precondition Failed` is:
 
-| .NET                        | Java/Kotlin         | TypeScript         |
-| --------------------------- | ------------------- | ------------------ |
-| `InvalidOperationException` | `ConflictException` | `ConcurrencyError` |
+| .NET                        | Java/Kotlin            | TypeScript         |
+| --------------------------- | ---------------------- | ------------------ |
+| `InvalidOperationException` | `ConcurrencyException` | `ConcurrencyError` |
 
 The example below plays both Alice and Bob, using two endpoint objects for the same contact:
 
@@ -51,6 +51,8 @@ The example below plays both Alice and Bob, using two endpoint objects for the s
     }
     ```
 
+    In .NET the same exception type is used for both `409 Conflict` and `412 Precondition Failed`. Derive from `DefaultErrorHandler` and override `MapException` if you need a separate exception type for `412`, then pass your handler to the entry endpoint's constructor.
+
 === "Java"
 
     ```java
@@ -66,10 +68,12 @@ The example below plays both Alice and Bob, using two endpoint objects for the s
     bobCopy.setName("Smith");
     try {
         bob.set(bobCopy);             // If-Match: "v7", fails
-    } catch (ConflictException ex) {
+    } catch (ConcurrencyException ex) {
         System.out.println("Someone else changed this contact. Please review their changes.");
     }
     ```
+
+    `ConcurrencyException` derives from `ConflictException`, the exception type for `409 Conflict`, so catching `ConflictException` handles both.
 
 === "Kotlin"
 
@@ -84,10 +88,12 @@ The example below plays both Alice and Bob, using two endpoint objects for the s
 
     try {
         bob.set(bobCopy.copy(name = "Smith"))              // If-Match: "v7", fails
-    } catch (ex: ConflictException) {
+    } catch (ex: ConcurrencyException) {
         println("Someone else changed this contact. Please review their changes.")
     }
     ```
+
+    `ConcurrencyException` derives from `ConflictException`, the exception type for `409 Conflict`, so catching `ConflictException` handles both.
 
 === "TypeScript"
 

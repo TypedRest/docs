@@ -10,6 +10,6 @@ TypedRest maps non-success HTTP Status (4xx and 5xx) to exceptions/errors. The f
 | **404 NotFound** or **410 Gone** | `KeyNotFoundException`        | `NotFoundException`        | `NotFoundError`            |
 | **408 Request Timeout**          | `TimeoutException`            | `TimeoutException`         | `TimeoutError`             |
 | **409 Conflict**                 | `InvalidOperationException`   | `ConflictException`        | `ConflictError`            |
-| **412 Precondition Failed**      | `InvalidOperationException`   | `ConflictException`        | `ConcurrencyError`         |
+| **412 Precondition Failed**      | `InvalidOperationException`   | `ConcurrencyException`     | `ConcurrencyError`         |
 | **416 Range Not Satisfiable**    | `InvalidOperationException`   | `ConflictException`        | `RangeNotSatisfiableError` |
 | other                            | `HttpRequestException`        | `HttpException`            | `HttpError`                |
