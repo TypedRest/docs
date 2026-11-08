@@ -22,7 +22,7 @@ dotnet tool install -g typedrest-codegen
 
     Add [`TypedRest.Reactive`](https://www.nuget.org/packages/TypedRest.Reactive/) if the document asks for any [polling or streaming](custom-code.md) endpoints.
 
-    Add [`TypedRest.SystemTextJson`](https://www.nuget.org/packages/TypedRest.SystemTextJson/) if you set the serializer to `system-text-json``.
+    Add [`TypedRest.SystemTextJson`](https://www.nuget.org/packages/TypedRest.SystemTextJson/) if you set the serializer to `system-text-json`.
 
 === "Java"
 
