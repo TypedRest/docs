@@ -175,7 +175,7 @@ Generated DTOs have to be annotated for whichever [serializer](../serializers/js
 
 Each default matches what the corresponding TypedRest port uses out of the box, so most projects never set this.
 
-**The choice has to match your runtime configuration.** The serializers read entirely different attributes, so a DTO annotated for one silently falls back to its member names under the other, changing the wire format without any error.
+**The choice has to match your runtime configuration.** The serializers read entirely different attributes, so a DTO annotated for one silently falls back to its member names under the other, changing the wire format without any error. The generated entry endpoint constructor takes care of this by configuring the matching serializer, so you only need to think about it when you [write that constructor yourself](custom-code.md).
 
 **Java cannot use `kotlinx`.** kotlinx.serialization generates its serializers with a Kotlin compiler plugin and cannot handle a class written in Java, so the tool rejects the combination.
 

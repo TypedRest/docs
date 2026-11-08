@@ -80,6 +80,17 @@ Generated code is overwritten whenever it is regenerated, so do not edit it. Add
 
     If you generate interfaces and want the method on `IContactElementEndpoint` too, add a `partial interface` declaration the same way.
 
+    The generated entry endpoint constructor takes the base URI and configures the [serializer](index.md#serializers). You can add more constructors next to it in a partial class, for example one that takes an `HttpClient` for testing:
+
+    ```csharp
+    public partial class MyServiceClient
+    {
+        public MyServiceClient(HttpClient httpClient, Uri uri)
+            : base(httpClient, uri, serializer: new SystemTextJsonSerializer())
+        {}
+    }
+    ```
+
     A partial class cannot change a constructor that has already been generated. If the entry endpoint needs a custom error handler or default headers, turn off its generated constructor (`GenerateEntryConstructor="false"` for the [source generator](source-generator.md), `--generate-entry-constructor false` for the [command-line tool](cli.md)) and write your own in a partial class.
 
 === "Java"

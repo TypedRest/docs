@@ -66,7 +66,7 @@ Generated DTOs are annotated for Newtonsoft.Json by default, matching what [Type
 </PropertyGroup>
 ```
 
-This has to match your runtime configuration. The two read entirely different attributes, so a DTO annotated for one silently falls back to its C# member names under the other, changing the wire format without any error.
+The generated entry endpoint constructor configures the matching serializer for you (`base(uri, serializer: new SystemTextJsonSerializer())`). If you [write that constructor yourself](custom-code.md), pass the same serializer.
 
 ## Limitations
 
