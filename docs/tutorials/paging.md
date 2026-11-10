@@ -240,7 +240,7 @@ A server may answer with `Content-Range: elements 0-49/*` if counting all elemen
     }
     ```
 
-A `416` on the very first page means the collection is empty, which is why the examples only treat it as the end when `from > 0`. Handle that case too if empty collections are possible.
+The examples only treat a `416` as the end when `from > 0`, so that a server rejecting the very first request is not mistaken for an empty result. Some servers also answer `416` for the first page of an empty collection; drop the `from > 0` check if yours does.
 
 ## The last few elements
 
@@ -274,9 +274,9 @@ This sends `Range: elements=-10`. Likewise, leaving out the end (`elements=100-`
 
 ## Checking for support
 
-After any request to the collection, the read range allowed property (`ReadRangeAllowed` in .NET, `readRangeAllowed` in Java, Kotlin and TypeScript) tells you whether the server sent `Accept-Ranges: elements`. It is `null`/`undefined` before the first request.
+After any request to the collection, the read range allowed property (`ReadRangeAllowed` in .NET, `getReadRangeAllowed()` in Java, `readRangeAllowed` in Kotlin and TypeScript) tells you whether the server sent `Accept-Ranges: elements`. It is `null`/`undefined` before the first request.
 
-If the server uses a different unit name in its `Range` headers, such as `items`, change the endpoint's range unit (`RangeUnit` in .NET, `rangeUnit` in Java, Kotlin and TypeScript) before sending requests.
+If the server uses a different unit name in its `Range` headers, such as `items`, change the endpoint's range unit (`RangeUnit` in .NET, `setRangeUnit()` in Java, `rangeUnit` in Kotlin and TypeScript) before sending requests. In .NET, Java and Kotlin the range unit belongs to the endpoint class, not to its interface, so the client has to expose the collection as the class type (`CollectionEndpoint` or `GenericCollectionEndpointImpl`) for you to change it.
 
 ## Next steps
 

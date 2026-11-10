@@ -51,7 +51,7 @@ The example below plays both Alice and Bob, using two endpoint objects for the s
     }
     ```
 
-    In .NET the same exception type is used for both `409 Conflict` and `412 Precondition Failed`. Derive from `DefaultErrorHandler` and override `MapException` if you need a separate exception type for `412`, then pass your handler to the entry endpoint's constructor.
+    In .NET the same exception type is used for both `409 Conflict` and `412 Precondition Failed`. Derive from `DefaultErrorHandler` and override `MapException` if you need a separate exception type for `412`, then pass your handler to the entry endpoint's constructor. Derive that type from `InvalidOperationException`, because `UpdateAsync` only retries on that exception.
 
 === "Java"
 

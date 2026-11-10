@@ -52,6 +52,15 @@ paths:
       responses:
         '204':
           description: Updated
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '204':
+          description: Merged
     delete:
       responses:
         '204':
@@ -336,6 +345,8 @@ Generated code is regenerated, so do not edit it. Add to it instead, as describe
     await client.Contacts["1337"].RenameAsync("Smith");
     ```
 
+    `RenameAsync` uses a read-modify-write cycle with ETags; see [Optimistic concurrency](concurrency.md).
+
 === "Java"
 
     Derive from the generated class:
@@ -373,8 +384,6 @@ Generated code is regenerated, so do not edit it. Add to it instead, as describe
         }
     }
     ```
-
-`RenameAsync` uses a read-modify-write cycle with ETags; see [Optimistic concurrency](concurrency.md).
 
 ## Keeping client and spec in sync
 

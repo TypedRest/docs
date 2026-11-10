@@ -166,7 +166,7 @@ A mock server can also [produce errors](../testing/endpoints.md#testing-error-re
 
         ContactEndpoint contact = client.getContacts().get("1337");
         Contact entity = contact.read();
-        assertThrows(ConflictException.class, () -> contact.set(entity));
+        assertThrows(ConcurrencyException.class, () -> contact.set(entity));
 
         server.takeRequest(); // GET
         assertEquals("\"v7\"", server.takeRequest().getHeader("If-Match"));
@@ -186,7 +186,7 @@ A mock server can also [produce errors](../testing/endpoints.md#testing-error-re
 
         val contact = client.contacts["1337"]
         val entity = contact.read()
-        assertThrows<ConflictException> { contact.set(entity) }
+        assertThrows<ConcurrencyException> { contact.set(entity) }
 
         server.takeRequest() // GET
         assertEquals("\"v7\"", server.takeRequest().getHeader("If-Match"))
@@ -369,3 +369,8 @@ The test should check that `welcome` pokes the right contact, without any HTTP i
 If you write the service as well as the client, test the two together: run the service inside the test process, replace its own dependencies such as its database with mocks, and point the `AddressBookClient` at it. This catches a route that differs between client and service, a status code the client does not expect, or a property the two serialize differently.
 
 [Integration testing](../testing/integration.md) shows how to host the service with `WebApplicationFactory` in ASP.NET Core or `@SpringBootTest` in Spring Boot. [Sample-DotNet](https://github.com/TypedRest/Sample-DotNet) and [Sample-Kotlin](https://github.com/TypedRest/Sample-Kotlin) both have complete sets of tests like this for the address book API.
+
+## Next steps
+
+- [Testing](../testing/index.md): the reference for each of these strategies.
+- [Optimistic concurrency](concurrency.md): the conflict handling tested above.

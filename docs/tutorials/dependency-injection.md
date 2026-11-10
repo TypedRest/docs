@@ -2,13 +2,12 @@
 
 In a service or web application you usually don't create clients by hand. You register them with the dependency injection container once, configure the HTTP client there, and let the container pass the client to whatever needs it.
 
-This tutorial registers the `AddressBookClient` from [Build your first client](first-client.md) in ASP.NET Core.
+!!! note
+    This tutorial is .NET only.
 
-## ASP.NET Core
+This tutorial registers the `AddressBookClient` from [Build your first client](first-client.md) in ASP.NET Core. Everything in it works for any .NET application that uses `IServiceCollection`, such as worker services or console apps built on the generic host.
 
-Everything in this section works for any .NET application that uses `IServiceCollection`, such as worker services or console apps built on the generic host.
-
-### 1. Prepare the client
+## 1. Prepare the client
 
 `AddTypedRest()` registers the client as a typed HTTP client: `IHttpClientFactory` creates and configures the `HttpClient` and passes it to the client's constructor, so the client needs a constructor that takes one (see [Dependency injection](../setup/dotnet.md#dependency-injection) in the .NET reference). An interface makes it easy to replace the client in tests:
 
@@ -33,7 +32,7 @@ public class AddressBookClient : EntryEndpoint, IAddressBookClient
 
 To mock calls deeper in the client, such as `Contacts["1337"].Poke`, give `ContactEndpoint` an interface as well; see [Mocking a custom client](../testing/mocking.md#mocking-a-custom-client). If you [generate the client](from-openapi.md), it already has interfaces for everything, and you can add the constructor in a `partial` class.
 
-### 2. Register the client
+## 2. Register the client
 
 Put the API's URI in `appsettings.json`:
 
@@ -52,7 +51,7 @@ builder.Services.AddTypedRest<IAddressBookClient, AddressBookClient>(
     new Uri(builder.Configuration["AddressBook:Uri"]!));
 ```
 
-### 3. Use the client
+## 3. Use the client
 
 Ask for `IAddressBookClient` wherever you need it, for example in a minimal API handler:
 
@@ -76,7 +75,7 @@ public class TeamService(IAddressBookClient addressBook)
 
 The client is registered as transient. Do not keep it in a singleton for the lifetime of the application; the [reference](../setup/dotnet.md#dependency-injection) explains why and what to do instead.
 
-### 4. Configure the HTTP client
+## 4. Configure the HTTP client
 
 `AddTypedRest()` returns an `IHttpClientBuilder`, so all of the HTTP client configuration that ASP.NET Core offers is available. For example, to set a timeout and add retries for transient errors with [Microsoft.Extensions.Http.Resilience](https://www.nuget.org/packages/Microsoft.Extensions.Http.Resilience/):
 
@@ -90,7 +89,7 @@ builder.Services.AddTypedRest<IAddressBookClient, AddressBookClient>(uri)
 
 `DisableForUnsafeHttpMethods()` turns off retries for `POST`, `PUT`, `PATCH`, `DELETE` and `CONNECT`, so only reads such as `GET` are repeated. Without it, a `POST` that reached the server but whose response got lost would be sent again and could create a contact twice.
 
-### 5. Add authentication
+## 5. Add authentication
 
 For HTTP Basic authentication:
 
@@ -98,6 +97,19 @@ For HTTP Basic authentication:
 builder.Services.AddTypedRest<IAddressBookClient, AddressBookClient>(uri)
     .AddBasicAuth(credentials => builder.Configuration.GetSection("AddressBook:Credentials").Bind(credentials));
 ```
+
+```json
+{
+  "AddressBook": {
+    "Uri": "https://example.com/api/",
+    "Credentials": {
+      "UserName": "alice"
+    }
+  }
+}
+```
+
+Set `AddressBook:Credentials:Password` outside of `appsettings.json`, in the same way as the client secret below.
 
 For OAuth 2.0, add [TypedRest.OAuth](https://www.nuget.org/packages/TypedRest.OAuth/) and its [handler](../setup/dotnet.md#oauth-20), which requests tokens with the client credentials flow and renews them before they expire:
 

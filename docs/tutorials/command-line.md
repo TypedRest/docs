@@ -26,6 +26,8 @@ dotnet add package TypedRest.CommandLine
 
 Then add a reference to the project or package that contains your client, or copy the client classes into the new project.
 
+The examples in this tutorial call the tool `addressbook`. To get that name, add `<AssemblyName>addressbook</AssemblyName>` to the project file. Without it the executable is called `AddressBook.Cli`.
+
 ## 2. Mirror the client with commands
 
 For each endpoint type there is a command type in the `TypedRest.CommandLine.Commands` namespace that maps arguments onto that endpoint's methods: `CollectionCommand` for collection endpoints, `ElementCommand` for element endpoints, `ActionCommand` for action endpoints, and so on.
@@ -142,7 +144,7 @@ addressbook contacts 1337 poke
 addressbook contacts 1337 delete
 ```
 
-Running `addressbook` on its own lists the top-level commands.
+Running `addressbook` on its own prints the top-level commands to stderr and exits with code 1.
 
 Entities are printed as indented JSON, unless their class overrides `ToString()`. A collection argument containing exactly one `-`, such as `0-9`, `10-` or `-5`, is read as a [range](paging.md) rather than an ID; IDs of that form cannot be addressed this way.
 
@@ -165,7 +167,8 @@ The `Executor` maps exceptions to exit codes, so scripts can react to specific e
 | 99        | Canceled                                                                 |
 
 ```bash
-if ! addressbook contacts 1337 > /dev/null 2>&1; then
+addressbook contacts 1337 > /dev/null 2>&1
+if [ $? -eq 5 ]; then
     echo "Contact 1337 is missing"
 fi
 ```
@@ -184,6 +187,11 @@ class ContactCommand : ElementCommand<Contact>
 }
 ```
 
-`Console` here is the command's `IConsole`, which writes to stdout, stderr and reads from stdin. Replace it with your own implementation to change how all output is formatted. Similarly, override `InputEntity` to build an entity from arguments such as `--name Smith` instead of JSON.
+`Console` here is the command's `IConsole` property, not `System.Console`. It writes to stdout and stderr and reads from stdin. Set it to your own implementation to change how a command formats its output. Similarly, override `InputEntity` to build an entity from arguments such as `--name Smith` instead of JSON.
 
 For endpoint types with no matching command, or to add operations of your own, derive from `EndpointCommand<TEndpoint>` and override `ExecuteInnerAsync`.
+
+## Next steps
+
+- [Authentication](authentication.md): the schemes a custom endpoint provider can set up.
+- [Paging](paging.md): the range requests behind `addressbook contacts 0-9`.

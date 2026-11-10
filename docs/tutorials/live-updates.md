@@ -1,8 +1,10 @@
 # Live updates
 
-Sometimes reading a resource once is not enough: you want to know when it changes. TypedRest has four [reactive endpoint](../endpoints/index.md) types for this. Each one turns repeated or long-running HTTP requests into a stream of entities, but they put different demands on the server.
+Sometimes reading a resource once is not enough: you want to know when it changes. TypedRest has four [reactive endpoint](../endpoints/reactive/index.md) types for this. Each one turns repeated or long-running HTTP requests into a stream of entities, but they put different demands on the server.
 
-This tutorial uses each of them for a different part of the address book: an import job you wait for, a change log you follow, and events the server pushes.
+This tutorial uses three of them for different parts of the address book: an import job you wait for, a change log you follow, and events the server pushes. The fourth, the plain streaming endpoint, is mentioned at the end of the section on Server-Sent Events.
+
+The examples assume entity classes named `ImportJob`, `ContactChange` and `ContactEvent` with the properties the code uses.
 
 !!! note "Packages"
     For .NET, add the [TypedRest.Reactive](https://www.nuget.org/packages/TypedRest.Reactive/) NuGet package. For Java/Kotlin, add the [typedrest-reactive](https://central.sonatype.com/artifact/net.typedrest/typedrest-reactive) Maven artifact. In TypeScript, reactive endpoints are part of the main `typedrest` package. .NET and Java/Kotlin provide streams as observables, TypeScript as async iterables; see [Reactive endpoints](../endpoints/reactive/index.md).
@@ -148,10 +150,10 @@ An [SSE endpoint](../endpoints/reactive/sse.md) deserializes the `data` of each 
 === "Java"
 
     ```java
-    StreamingEndpoint<ContactEvent> events = new SseStreamingEndpointImpl<>(client, "./contacts/1337/events", ContactEvent.class, null);
+    StreamingEndpoint<ContactEvent> events = new SseStreamingEndpointImpl<>(client, "./contacts/1337/events", ContactEvent.class);
 
     Disposable subscription = events.getObservable()
-        .subscribe(x -> System.out.println(x.getType()));
+        .subscribe(x -> System.out.println(x.getType() + ": " + (x.getContact() == null ? null : x.getContact().getName())));
     ```
 
 === "Kotlin"
@@ -186,3 +188,8 @@ In .NET and Java/Kotlin, dispose the subscription; the C# examples above do this
 ## Choosing an endpoint
 
 As a rule of thumb: use polling if you cannot change the server, a streaming collection if the data is a list that only grows and clients need to catch up on what they missed, and SSE if updates must arrive immediately. [Choosing an endpoint](../endpoints/reactive/index.md#choosing-an-endpoint) compares all four reactive endpoints, including what each needs from your infrastructure.
+
+## Next steps
+
+- [Paging](paging.md): the range requests that streaming collections build on.
+- [Reactive endpoints](../endpoints/reactive/index.md): the reference for all four endpoint types.

@@ -108,7 +108,7 @@ Every client starts with an [entry endpoint](../endpoints/entry.md) for the API'
 
     Without a `Location` header, TypedRest finds the ID in the response body by reading the entity's `id` property.
 
-Creating an element returns an endpoint for it rather than the entity. TypedRest takes the new element's URI from the `Location` header, or from the ID in the response body if there is no such header. If the server sends neither, it returns `null`/`undefined`, which is why the code above needs `!` or `!!`.
+Creating an element returns an endpoint for it rather than the entity. TypedRest takes the new element's URI from the `Location` header, or from the ID in the response body if there is no such header. If the server sends neither, it returns `null`/`undefined`, which is why the C#, Kotlin and TypeScript code above needs `!` or `!!`.
 
 !!! tip "The `./` prefix"
     `./contacts` resolves to `https://example.com/api/contacts`. Without the `./`, URI resolution would replace the last segment of the parent URI if it lacked a trailing slash. Prefixing relative URIs with `./` makes child URIs predictable. See [Relative URIs](../link-handling/relative-uris.md).
@@ -185,7 +185,7 @@ A contact has a note and a poke action, but `CollectionEndpoint<Contact>` hands 
     }
     ```
 
-    The collection creates element endpoints through a constructor with exactly the signature `(IEndpoint referrer, Uri relativeUri)`, so keep it.
+    The collection creates element endpoints through a public constructor that takes an `IEndpoint` and a `Uri` (or a `string`), so keep it.
 
 === "Java"
 
@@ -347,7 +347,7 @@ The client now covers the whole API:
     await smith.delete();
     ```
 
-`client.Contacts["1337"]` does not send a request. Building endpoints is purely local; a request goes out only when you call a method such as read or set.
+Addressing a contact by its ID does not send a request. Building endpoints is purely local; a request goes out only when you call a method such as read or set.
 
 ## 6. Handle errors
 
