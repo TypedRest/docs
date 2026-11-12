@@ -20,6 +20,8 @@ Pass a username and password when creating the entry endpoint:
     var client = new AddressBookClient(new Uri("https://example.com/api/"), new NetworkCredential("alice", "secret"));
     ```
 
+    You can also put the credentials in the URI, as in `https://alice:secret@example.com/api/`. They are read from the URI and sent as a Basic `Authorization` header.
+
 === "Java"
 
     ```java
@@ -34,6 +36,8 @@ Pass a username and password when creating the entry endpoint:
     AddressBookClient client = new AddressBookClient(URI.create("https://example.com/api/"), new HttpCredentials("alice", "secret"));
     ```
 
+    You can also put the credentials in the URI, as in `https://alice:secret@example.com/api/`. They are read from the URI and sent as a Basic `Authorization` header.
+
 === "Kotlin"
 
     ```kotlin
@@ -44,16 +48,14 @@ Pass a username and password when creating the entry endpoint:
     val client = AddressBookClient(URI.create("https://example.com/api/"), HttpCredentials("alice", "secret"))
     ```
 
-=== "TypeScript"
+    You can also put the credentials in the URI, as in `https://alice:secret@example.com/api/`. They are read from the URI and sent as a Basic `Authorization` header.
 
-    The TypeScript entry endpoint has no credentials parameter. Set the header on its HTTP client instead:
+=== "TypeScript"
 
     ```typescript
     const client = new AddressBookClient(new URL("https://example.com/api/"));
     client.httpClient.defaultHeaders.set("Authorization", `Basic ${btoa("alice:secret")}`);
     ```
-
-In .NET, Java and Kotlin you can also [put the credentials in the URI](../endpoints/entry.md#http-basic-authentication).
 
 ## API keys and static bearer tokens
 
@@ -164,7 +166,7 @@ Tokens from an OAuth 2.0 identity server expire, so a fixed header is not enough
 
 === "Java"
 
-    TypedRest for the JVM has no built-in OAuth support. An OkHttp interceptor of your own can cache the token and refresh it on a `401 Unauthorized`:
+    Create an OkHttp interceptor to cache the token and refresh it on a `401 Unauthorized`:
 
     ```java
     public record AccessToken(String value, Instant expiresAt) {}
@@ -208,7 +210,7 @@ Tokens from an OAuth 2.0 identity server expire, so a fixed header is not enough
 
 === "Kotlin"
 
-    TypedRest for the JVM has no built-in OAuth support. An OkHttp interceptor of your own can cache the token and refresh it on a `401 Unauthorized`:
+    Create an OkHttp interceptor to cache the token and refresh it on a `401 Unauthorized`:
 
     ```kotlin
     data class AccessToken(val value: String, val expiresAt: Instant)
@@ -245,7 +247,7 @@ Tokens from an OAuth 2.0 identity server expire, so a fixed header is not enough
 
 === "TypeScript"
 
-    TypedRest for TypeScript has no built-in OAuth support. Derive from `FetchHttpClient` to add the token to each request and refresh it on a `401 Unauthorized`:
+    Derive from `FetchHttpClient` to add the token to each request and refresh it on a `401 Unauthorized`:
 
     ```typescript
     import { FetchHttpClient, HttpMethod } from "typedrest/http";

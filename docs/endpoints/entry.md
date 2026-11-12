@@ -132,14 +132,10 @@ Since all requests go through the entry endpoint's HTTP client, authentication i
 
 === "TypeScript"
 
-    The TypeScript entry endpoint has no credentials parameter. Set the header instead:
-
     ```typescript
     const client = new EntryEndpoint(new URL("https://example.com/api/"));
     client.httpClient.defaultHeaders.set("Authorization", `Basic ${btoa("alice:secret")}`);
     ```
-
-In .NET, Java and Kotlin you can also put the credentials in the URI, as in `https://alice:secret@example.com/api/`. They are read from the URI and sent as a Basic `Authorization` header.
 
 ### API keys and bearer tokens
 
