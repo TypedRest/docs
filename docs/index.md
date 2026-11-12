@@ -2,7 +2,110 @@ title: Home
 
 # ![Logo](images/logo.svg)
 
-TypedRest helps you build type-safe, fluent-style REST API clients. Common REST patterns such as collections are represented as classes, allowing you to write more idiomatic code.
+**Describe your REST API as a tree of endpoints, not a list of HTTP calls.**
+
+TypedRest helps you build type-safe, fluent-style REST API clients. Common REST patterns are represented as classes that you compose to mirror the URL structure of your API.
+
+Tell TypedRest that `/contacts` is a collection and get type-safe listing, creating, reading, updating and deleting in return.
+
+[Build your first client](tutorials/first-client.md){ .md-button .md-button--primary }
+[Generate one from OpenAPI](tutorials/from-openapi.md){ .md-button }
+
+## Define your client
+
+A few lines are enough to describe an API with a collection of contacts plus a "notes" endpoint nested underneath:
+
+=== "C#"
+
+    ```csharp
+    class MyClient(Uri uri) : EntryEndpoint(uri)
+    {
+      public ContactCollectionEndpoint Contacts => new(this);
+    }
+
+    class ContactCollectionEndpoint(IEndpoint referrer)
+      : CollectionEndpoint<Contact, ContactEndpoint>(referrer, relativeUri: "./contacts");
+
+    class ContactEndpoint(IEndpoint referrer, Uri relativeUri)
+      : ElementEndpoint<Contact>(referrer, relativeUri)
+    {
+      public ElementEndpoint<Note> Note => new(this, relativeUri: "./note");
+    }
+    ```
+
+=== "Java"
+
+    ```java
+    class MyClient extends EntryEndpoint {
+      public MyClient(URI uri) {
+        super(uri);
+      }
+
+      public ContactCollectionEndpoint getContacts() {
+        return new ContactCollectionEndpoint(this);
+      }
+    }
+
+    class ContactCollectionEndpoint extends GenericCollectionEndpointImpl<Contact, ContactEndpoint> {
+      public ContactCollectionEndpoint(Endpoint referrer) {
+        super(referrer, "./contacts", Contact.class, ContactEndpoint::new);
+      }
+    }
+
+    class ContactEndpoint extends ElementEndpointImpl<Contact> {
+      public ContactEndpoint(Endpoint referrer, URI relativeUri) {
+        super(referrer, relativeUri, Contact.class);
+      }
+
+      public ElementEndpoint<Note> getNote() {
+        return new ElementEndpointImpl<>(this, "./note", Note.class);
+      }
+    }
+    ```
+
+=== "Kotlin"
+
+    ```kotlin
+    class MyClient(uri: URI) : EntryEndpoint(uri) {
+      val contacts: ContactCollectionEndpoint
+        get() = ContactCollectionEndpoint(this)
+    }
+
+    class ContactCollectionEndpoint(referrer: Endpoint) :
+      GenericCollectionEndpointImpl<Contact, ContactEndpoint>(referrer, "./contacts", Contact::class.java, ::ContactEndpoint)
+
+    class ContactEndpoint(referrer: Endpoint, relativeUri: URI) :
+      ElementEndpointImpl<Contact>(referrer, relativeUri, Contact::class.java) {
+      val note: ElementEndpoint<Note>
+        get() = ElementEndpointImpl(this, "./note", Note::class.java)
+    }
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    class MyClient extends EntryEndpoint {
+      get contacts() {
+        return new ContactCollectionEndpoint(this);
+      }
+    }
+
+    class ContactCollectionEndpoint extends GenericCollectionEndpoint<Contact, ContactEndpoint> {
+      constructor(referrer: Endpoint) {
+        super(referrer, "./contacts", ContactEndpoint);
+      }
+    }
+
+    class ContactEndpoint extends ElementEndpoint<Contact> {
+      get note() {
+        return new ElementEndpoint<Note>(this, "./note");
+      }
+    }
+    ```
+
+## Use it
+
+Navigate the API like an object model, with code completion guiding the way:
 
 === "C#"
 
@@ -103,6 +206,14 @@ TypedRest helps you build type-safe, fluent-style REST API clients. Common REST 
     // DELETE /contacts/1337
     await smith.delete();
     ```
+
+## Why TypedRest?
+
+**Plain HTTP clients** leave the REST conventions in your head: you build the URLs, pick the verbs, follow the `Location` headers and (de)serialize the bodies yourself.
+
+**Typical generated clients** give you one flat method per operation, such as `getContactNote(id)`, without capturing how the resources relate to each other.
+
+**TypedRest** gives you a navigable tree of endpoints that mirrors the URL structure of your API. You declare which pattern each resource follows and inherit its behavior.
 
 ## Documentation
 
