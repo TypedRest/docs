@@ -103,23 +103,25 @@ What is specific to your client is its structure: does `Contacts["1337"].Poke` r
 
 === "TypeScript"
 
-    With [jest-fetch-mock](https://github.com/jefflau/jest-fetch-mock), queue a response and check the request it was used for:
+    With [vitest-fetch-mock](https://github.com/IanVS/vitest-fetch-mock) set up as the global `fetchMock`, queue a response and check the request it was used for:
 
     ```typescript
-    import fetchMock from "jest-fetch-mock";
+    import { beforeEach, expect, test } from "vitest";
 
-    fetchMock.enableMocks();
-    beforeEach(() => fetchMock.resetMocks());
+    let client: AddressBookClient;
+
+    beforeEach(() => {
+        client = new AddressBookClient(new URL("http://localhost/"));
+    });
 
     test("pokes contact", async () => {
-        const client = new AddressBookClient(new URL("http://localhost/"));
-        fetchMock.mockResponseOnce("", { status: 204 });
+        fetchMock.mockResponseOnce({ status: 204 });
 
         await client.contacts.get("1337").poke.invoke();
 
-        const [url, init] = fetchMock.mock.calls[0];
-        expect(url).toBe("http://localhost/contacts/1337/poke");
-        expect(init?.method).toBe("POST");
+        const [request] = fetchMock.requests();
+        expect(request.url).toBe("http://localhost/contacts/1337/poke");
+        expect(request.method).toBe("POST");
     });
     ```
 
@@ -199,7 +201,6 @@ A mock server can also [produce errors](../testing/endpoints.md#testing-error-re
     import { ConcurrencyError } from "typedrest/errors";
 
     test("reports conflict", async () => {
-        const client = new AddressBookClient(new URL("http://localhost/"));
         fetchMock.mockResponseOnce('{"id":"1337","name":"Smith"}', {
             headers: { "Content-Type": "application/json", "ETag": '"v7"' }
         });
@@ -209,8 +210,8 @@ A mock server can also [produce errors](../testing/endpoints.md#testing-error-re
         const entity = await contact.read();
         await expect(contact.set(entity)).rejects.toBeInstanceOf(ConcurrencyError);
 
-        const [, init] = fetchMock.mock.calls[1];
-        expect(new Headers(init?.headers).get("If-Match")).toBe('"v7"');
+        const [, put] = fetchMock.requests();
+        expect(put.headers.get("If-Match")).toBe('"v7"');
     });
     ```
 
@@ -353,8 +354,8 @@ The test should check that `welcome` pokes the right contact, without any HTTP i
 
     ```typescript
     test("pokes new team member", async () => {
-        const poke = { invoke: jest.fn().mockResolvedValue(undefined) };
-        const contacts = { get: jest.fn().mockReturnValue({ poke }) };
+        const poke = { invoke: vi.fn().mockResolvedValue(undefined) };
+        const contacts = { get: vi.fn().mockReturnValue({ poke }) };
         const addressBook = { contacts } as unknown as AddressBookClient;
 
         await new TeamService(addressBook).welcome("1337");

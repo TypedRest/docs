@@ -151,20 +151,24 @@ Consider a service that filters contacts via a TypedRest endpoint:
 
 === "TypeScript"
 
-    Use Jest's built-in mock utilities (or any other mocking library) to create a partial stand-in for the endpoint:
+    Use [Vitest](https://vitest.dev/)'s `vi.fn()` (or any other mocking library) to create a partial stand-in for the endpoint:
 
     ```typescript
-    const mockContacts = {
-        readAll: jest.fn().mockResolvedValue([
-            { name: 'Alice', isActive: true },
-            { name: 'Bob',   isActive: false }
-        ])
-    } as unknown as CollectionEndpoint<Contact>;
+    import { expect, test, vi } from "vitest";
 
-    const service = new ContactService(mockContacts);
-    const result = await service.getActiveContacts();
+    test("returns only active contacts", async () => {
+        const mockContacts = {
+            readAll: vi.fn().mockResolvedValue([
+                { name: "Alice", isActive: true },
+                { name: "Bob",   isActive: false }
+            ])
+        } as unknown as CollectionEndpoint<Contact>;
 
-    expect(result).toEqual([{ name: 'Alice', isActive: true }]);
+        const service = new ContactService(mockContacts);
+        const result = await service.getActiveContacts();
+
+        expect(result).toEqual([{ name: "Alice", isActive: true }]);
+    });
     ```
 
     Because TypeScript uses structural typing, any object that provides the methods your service calls is a valid substitute - no separate interface declaration is required.
@@ -255,12 +259,12 @@ Real clients are trees of endpoints: an entry endpoint with child endpoints, som
     Build a plain object for each level of the chain, with only the members your code uses:
 
     ```typescript
-    const poke = { invoke: jest.fn().mockResolvedValue(undefined) };
-    const contacts = { get: jest.fn().mockReturnValue({ poke }) };
+    const poke = { invoke: vi.fn().mockResolvedValue(undefined) };
+    const contacts = { get: vi.fn().mockReturnValue({ poke }) };
     const client = { contacts } as unknown as MyClient;
 
-    await new WelcomeService(client).welcome('1337');
+    await new WelcomeService(client).welcome("1337");
 
-    expect(contacts.get).toHaveBeenCalledWith('1337');
+    expect(contacts.get).toHaveBeenCalledWith("1337");
     expect(poke.invoke).toHaveBeenCalled();
     ```

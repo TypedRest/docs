@@ -118,51 +118,78 @@ Most of what an endpoint does comes from TypedRest and is tested there. What is 
 
 === "TypeScript"
 
-    Install [jest-fetch-mock](https://github.com/jefflau/jest-fetch-mock) to intercept `fetch` calls:
+    Install [Vitest](https://vitest.dev/) and [vitest-fetch-mock](https://github.com/IanVS/vitest-fetch-mock) to intercept `fetch` calls:
 
     ```bash
-    npm install --save-dev jest-fetch-mock
+    npm install --save-dev vitest vitest-fetch-mock
     ```
 
-    Enable mocking in your test setup and use `mockOnceIf` to queue responses:
+    Replace `fetch` with a mock in a setup file. This also makes the mock available as the global `fetchMock`:
+
+    ```typescript title="vitest.setup.ts"
+    import createFetchMock from "vitest-fetch-mock";
+    import { vi } from "vitest";
+
+    createFetchMock(vi).enableMocks();
+    ```
+
+    Register the setup file in your Vitest config, and reset all mocks between tests. `fetchMock.resetMocks()` alone does not clear responses queued with `mockOnceIf()`, so a response a test did not use would otherwise be served to the next test:
+
+    ```typescript title="vitest.config.mts"
+    import { defineConfig } from "vitest/config";
+
+    export default defineConfig({
+        test: {
+            setupFiles: ["./vitest.setup.ts"],
+            mockReset: true
+        }
+    });
+    ```
+
+    Use `mockOnceIf` to queue a response for a specific URL:
 
     ```typescript
-    import fetchMock from 'jest-fetch-mock';
+    import { beforeEach, expect, test } from "vitest";
+    import { EntryEndpoint } from "typedrest/endpoints";
+    import { ElementEndpoint } from "typedrest/endpoints/generic";
 
-    fetchMock.enableMocks();
+    let endpoint: ElementEndpoint<Contact>;
 
-    beforeEach(() => fetchMock.resetMocks());
+    beforeEach(() => {
+        const client = new EntryEndpoint(new URL("http://localhost/"));
+        endpoint = new ElementEndpoint<Contact>(client, "contacts/1");
+    });
 
-    test('read contact', async () => {
-        const client = new EntryEndpoint(new URL('http://localhost/'));
-        const endpoint = new ElementEndpoint<Contact>(client, 'contacts/1');
-
+    test("reads contact", async () => {
         fetchMock.mockOnceIf(
-            'http://localhost/contacts/1',
+            "http://localhost/contacts/1",
             '{"name":"Smith"}',
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { "Content-Type": "application/json" } }
         );
 
         const contact = await endpoint.read();
-        expect(contact.name).toBe('Smith');
+
+        expect(contact.name).toBe("Smith");
     });
     ```
 
-    To verify a request body:
+    To verify the method and body of a request, pass a predicate and a function that checks the request before returning the response:
 
     ```typescript
-    test('set contact', async () => {
+    test("sets contact", async () => {
         fetchMock.mockOnceIf(
-            req => req.method === 'PUT' && req.url === 'http://localhost/contacts/1',
+            req => req.method === "PUT" && req.url === "http://localhost/contacts/1",
             async req => {
                 expect(await req.text()).toBe('{"name":"Smith"}');
-                return { body: '{"name":"Smith"}', headers: { 'Content-Type': 'application/json' } };
+                return { body: '{"name":"Smith"}', headers: { "Content-Type": "application/json" } };
             }
         );
 
-        await endpoint.set({ name: 'Smith' });
+        await endpoint.set({ name: "Smith" });
     });
     ```
+
+    [Sample-TypeScript](https://github.com/TypedRest/Sample-TypeScript) has a complete set of tests like this for its client.
 
 ## Testing error responses
 
@@ -196,10 +223,10 @@ A mock server is also the easiest way to produce error responses that are hard t
 === "TypeScript"
 
     ```typescript
-    import { NotFoundError } from 'typedrest/errors';
+    import { NotFoundError } from "typedrest/errors";
 
-    test('contact not found', async () => {
-        fetchMock.mockOnceIf('http://localhost/contacts/1', '', { status: 404 });
+    test("reports missing contact", async () => {
+        fetchMock.mockOnceIf("http://localhost/contacts/1", { status: 404 });
 
         await expect(endpoint.read()).rejects.toBeInstanceOf(NotFoundError);
     });

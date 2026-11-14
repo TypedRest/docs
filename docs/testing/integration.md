@@ -105,6 +105,36 @@ Run the service inside the test process and point the client at it. Replace the 
 
 === "TypeScript"
 
-    If the service is written in another language, test the TypeScript client against a running instance of it, for example one started in your CI pipeline, or rely on [endpoint tests](endpoints.md) with a mock server.
+    If the service runs on Node.js, start it on port `0` (a random free port) with mocked dependencies. A [Vitest fixture](https://vitest.dev/guide/test-context#extend-test-context) does this for every test:
+
+    ```typescript
+    import { once } from "node:events";
+    import type { AddressInfo } from "node:net";
+    import { test as base, expect, vi, type Mocked } from "vitest";
+
+    const test = base.extend<{ service: Mocked<ContactsService>; client: MyClient }>({
+        service: async ({}, use) => {
+            await use({ read: vi.fn() /* ... */ });
+        },
+        client: async ({ service }, use) => {
+            const server = createApp(service).listen(0, "localhost");
+            await once(server, "listening");
+            const { port } = server.address() as AddressInfo;
+            await use(new MyClient(new URL(`http://localhost:${port}/`)));
+            server.closeAllConnections();
+            server.close();
+        }
+    });
+
+    test("reads contact", async ({ service, client }) => {
+        service.read.mockReturnValue({ id: "1337", name: "Smith" });
+
+        const contact = await client.contacts.get("1337").read();
+
+        expect(contact.name).toBe("Smith");
+    });
+    ```
+
+    `createApp()` stands for a function that builds your Express app from whatever its routes depend on. [Sample-TypeScript](https://github.com/TypedRest/Sample-TypeScript) has a complete set of tests like this.
 
 Sharing the entity classes between client and service, as the sample projects do with a separate DTO project, rules out a whole class of mismatches before any test runs.
