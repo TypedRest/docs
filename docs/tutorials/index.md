@@ -120,4 +120,4 @@ The tutorials share these entity classes:
     }
     ```
 
-The [Sample-DotNet](https://github.com/TypedRest/Sample-DotNet) and [Sample-Kotlin](https://github.com/TypedRest/Sample-Kotlin) projects implement the same API as a working service and client, if you want to run the examples against a real server.
+The [Sample-DotNet](https://github.com/TypedRest/Sample-DotNet), [Sample-Kotlin](https://github.com/TypedRest/Sample-Kotlin) and [Sample-TypeScript](https://github.com/TypedRest/Sample-TypeScript) projects implement the same API as a working service and client, if you want to run the examples against a real server.

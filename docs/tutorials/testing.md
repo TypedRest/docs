@@ -368,7 +368,7 @@ The test should check that `welcome` pokes the right contact, without any HTTP i
 
 If you write the service as well as the client, test the two together: run the service inside the test process, replace its own dependencies such as its database with mocks, and point the `AddressBookClient` at it. This catches a route that differs between client and service, a status code the client does not expect, or a property the two serialize differently.
 
-[Integration testing](../testing/integration.md) shows how to host the service with `WebApplicationFactory` in ASP.NET Core or `@SpringBootTest` in Spring Boot. [Sample-DotNet](https://github.com/TypedRest/Sample-DotNet) and [Sample-Kotlin](https://github.com/TypedRest/Sample-Kotlin) both have complete sets of tests like this for the address book API.
+[Integration testing](../testing/integration.md) shows how to host the service with `WebApplicationFactory` in ASP.NET Core or `@SpringBootTest` in Spring Boot, or how to start an Express app on a random port in a Vitest fixture. [Sample-DotNet](https://github.com/TypedRest/Sample-DotNet), [Sample-Kotlin](https://github.com/TypedRest/Sample-Kotlin) and [Sample-TypeScript](https://github.com/TypedRest/Sample-TypeScript) all have complete sets of tests like this for the address book API.
 
 ## Next steps
 
