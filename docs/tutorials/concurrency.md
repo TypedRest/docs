@@ -129,7 +129,7 @@ The example below plays both Alice and Bob, using two endpoint objects for the s
 
     Keep the endpoint in a variable for the whole read-modify-write cycle, as in the examples above.
 
-    Every set or delete clears the stored response before sending its request. After catching the `412` above, `bob` therefore has no ETag left: calling `bob.SetAsync(bobCopy)` again would send no `If-Match` and overwrite Alice's change after all.
+    Every set or delete discards the stored ETag. A successful set stores the new one if the server sends it; a failed set leaves none. So after catching the `412` above, calling `bob.SetAsync(bobCopy)` again would send no `If-Match` and overwrite Alice's change after all.
 
 ## Retrying automatically
 
