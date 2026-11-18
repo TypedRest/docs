@@ -59,7 +59,7 @@ Endpoint for an individual resource.
 === "Kotlin"
 
     ```kotlin
-    val contact = ElementEndpointImpl(client, "contacts/123", Contact::class.java)
+    val contact = ElementEndpointImpl<Contact>(client, "contacts/123")
 
     // Check if the element exists
     val exists = contact.exists()
@@ -97,3 +97,47 @@ Endpoint for an individual resource.
     // Delete the element
     await contact.delete();
     ```
+
+## Generic entity types
+
+The entity type can itself be generic, e.g., a `Page<Contact>` wrapper or a plain `List<Contact>`. This applies to all endpoint types that take an entity type, not just element endpoints.
+
+=== "C#"
+
+    ```csharp
+    var page = new ElementEndpoint<Page<Contact>>(client, "contacts/page/1");
+    ```
+
+=== "Java"
+
+    Java erases generic type arguments, so a `Class` cannot describe `Page<Contact>`. Pass a `java.lang.reflect.Type` instead, e.g., from a type token such as Jackson's `TypeReference` or Guava's `TypeToken`:
+
+    ```java
+    Type pageType = new TypeReference<Page<Contact>>() {}.getType();
+    ElementEndpoint<Page<Contact>> page = new ElementEndpointImpl<>(client, "contacts/page/1", pageType);
+    ```
+
+=== "Kotlin"
+
+    Specify the type argument and TypedRest captures the full generic type:
+
+    ```kotlin
+    val page = ElementEndpointImpl<Page<Contact>>(client, "contacts/page/1")
+    ```
+
+    When deriving from an endpoint class, pass `javaTypeOf<T>()` to the super constructor instead:
+
+    ```kotlin
+    import net.typedrest.javaTypeOf
+
+    class PageEndpoint(referrer: Endpoint, relativeUri: URI) :
+        ElementEndpointImpl<Page<Contact>>(referrer, relativeUri, javaTypeOf<Page<Contact>>())
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    const page = new ElementEndpoint<Page<Contact>>(client, "contacts/page/1");
+    ```
+
+The [serializer](../../serializers/index.md) must be able to handle the generic type, e.g., by annotating `Page` with `@Serializable` when using kotlinx.serialization.

@@ -139,7 +139,7 @@ This is where TypedRest comes in. TypedRest is a set of libraries for consuming 
     ```kotlin
     val client = EntryEndpoint(URI.create("http://example.com/"))
 
-    val contacts = CollectionEndpointImpl(client, "./contacts", Contact::class.java)
+    val contacts = CollectionEndpointImpl<Contact>(client, "./contacts")
     val contactList = contacts.readAll()
 
     val smith = contacts.create(Contact("Smith"))
@@ -194,7 +194,7 @@ TypedRest uses an object-oriented approach to provide you with building blocks f
     ```kotlin
     class MyClient(uri: URI) : EntryEndpoint(uri) {
       val contacts: CollectionEndpoint<Contact>
-        get() = CollectionEndpointImpl(this, "./contacts", Contact::class.java)
+        get() = CollectionEndpointImpl<Contact>(this, "./contacts")
     }
     ```
 
@@ -329,7 +329,7 @@ Of course, we don't expect our predefined patterns to cover all possible use cas
     class ContactEndpoint(referrer: Endpoint, relativeUri: URI) :
       ElementEndpointImpl<Contact>(referrer, relativeUri, Contact::class.java) {
       val note: ElementEndpoint<Note>
-        get() = ElementEndpointImpl(this, "./note", Note::class.java)
+        get() = ElementEndpointImpl<Note>(this, "./note")
     }
     ```
 

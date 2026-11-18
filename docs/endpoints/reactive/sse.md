@@ -38,7 +38,7 @@ The request is sent with `Accept: text/event-stream`. The `data:` field of each 
 === "Kotlin"
 
     ```kotlin
-    val events = SseStreamingEndpointImpl(client, "events", Event::class.java)
+    val events = SseStreamingEndpointImpl<Event>(client, "events")
 
     // Subscribe to the stream
     val stream = events.getObservable()
@@ -75,7 +75,7 @@ A server can label events with an `event:` field to send more than one kind of m
 === "Kotlin"
 
     ```kotlin
-    val updates = SseStreamingEndpointImpl(client, "jobs/events", Job::class.java, eventType = "update")
+    val updates = SseStreamingEndpointImpl<Job>(client, "jobs/events", eventType = "update")
     ```
 
 === "TypeScript"
@@ -113,7 +113,7 @@ Turn reconnecting off to have connection failures surface as errors instead:
 === "Kotlin"
 
     ```kotlin
-    val events = SseStreamingEndpointImpl(client, "events", Event::class.java)
+    val events = SseStreamingEndpointImpl<Event>(client, "events")
         .apply { autoReconnect = false }
     ```
 

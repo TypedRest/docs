@@ -29,7 +29,7 @@ RPC endpoint that takes an entity as input and returns another entity as output 
 === "Kotlin"
 
     ```kotlin
-    val calculator = FunctionEndpointImpl(client, "calculate", Calculation::class.java, Result::class.java)
+    val calculator = FunctionEndpointImpl<Calculation, Result>(client, "calculate")
 
     // Invoke with input and get output
     val result = calculator.invoke(Calculation(10, 5, "add"))

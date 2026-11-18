@@ -29,7 +29,7 @@ RPC endpoint that returns an entity as output when invoked.
 === "Kotlin"
 
     ```kotlin
-    val generator = ProducerEndpointImpl(client, "generate-token", Token::class.java)
+    val generator = ProducerEndpointImpl<Token>(client, "generate-token")
 
     // Invoke and get output
     val token = generator.invoke()

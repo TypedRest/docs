@@ -76,7 +76,7 @@ Every client starts with an [entry endpoint](../endpoints/entry.md) for the API'
 
     ```kotlin
     val client = EntryEndpoint(URI.create("https://example.com/api/"))
-    val contacts = CollectionEndpointImpl(client, "./contacts", Contact::class.java)
+    val contacts = CollectionEndpointImpl<Contact>(client, "./contacts")
 
     // GET /api/contacts
     val all = contacts.readAll()
@@ -145,7 +145,7 @@ Creating endpoints inline works, but every caller would need to know the URL str
     ```kotlin
     class AddressBookClient(uri: URI) : EntryEndpoint(uri) {
         val contacts: CollectionEndpoint<Contact>
-            get() = CollectionEndpointImpl(this, "./contacts", Contact::class.java)
+            get() = CollectionEndpointImpl<Contact>(this, "./contacts")
     }
     ```
 
@@ -221,7 +221,7 @@ A contact has a note and a poke action, but `CollectionEndpoint<Contact>` hands 
     class ContactEndpoint(referrer: Endpoint, relativeUri: URI) :
         ElementEndpointImpl<Contact>(referrer, relativeUri, Contact::class.java) {
         val note: ElementEndpoint<Note>
-            get() = ElementEndpointImpl(this, "./note", Note::class.java)
+            get() = ElementEndpointImpl<Note>(this, "./note")
 
         val poke: ActionEndpoint
             get() = ActionEndpointImpl(this, "./poke")
@@ -229,7 +229,7 @@ A contact has a note and a poke action, but `CollectionEndpoint<Contact>` hands 
 
     class AddressBookClient(uri: URI) : EntryEndpoint(uri) {
         val contacts: GenericCollectionEndpoint<Contact, ContactEndpoint>
-            get() = GenericCollectionEndpointImpl(this, "./contacts", Contact::class.java, ::ContactEndpoint)
+            get() = GenericCollectionEndpointImpl<Contact, ContactEndpoint>(this, "./contacts", ::ContactEndpoint)
     }
     ```
 

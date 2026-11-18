@@ -37,6 +37,7 @@ Implement the platform's `Serializer` interface (or appropriate base type):
     import okhttp3.MediaType;
     import okhttp3.RequestBody;
     import okhttp3.ResponseBody;
+    import java.lang.reflect.Type;
     import java.util.List;
 
     public class MySerializer implements Serializer {
@@ -48,30 +49,20 @@ Implement the platform's `Serializer` interface (or appropriate base type):
         }
 
         @Override
-        public <T> RequestBody serialize(T entity, Class<T> type) {
+        public <T> RequestBody serialize(T entity, Type type) {
             // Custom serialization logic
-            return RequestBody.create(toBytes(entity), MEDIA_TYPE);
+            return RequestBody.create(toBytes(entity, type), MEDIA_TYPE);
         }
 
         @Override
-        public <T> RequestBody serializeList(Iterable<T> entities, Class<T> type) {
-            // Custom serialization logic
-            return RequestBody.create(toBytes(entities), MEDIA_TYPE);
-        }
-
-        @Override
-        public <T> T deserialize(ResponseBody body, Class<T> type) {
+        public <T> T deserialize(ResponseBody body, Type type) {
             // Custom deserialization logic
             return fromBytes(body.bytes(), type);
         }
-
-        @Override
-        public <T> List<T> deserializeList(ResponseBody body, Class<T> type) {
-            // Custom deserialization logic
-            return fromBytesAsList(body.bytes(), type);
-        }
     }
     ```
+
+    The `type` is either a plain `Class` or a generic type such as `List<Contact>` (a `ParameterizedType`). Lists of entities are passed as `List<T>`, so you do not need to override `serializeList()` and `deserializeList()`.
 
 === "Kotlin"
 
@@ -84,25 +75,22 @@ Implement the platform's `Serializer` interface (or appropriate base type):
     import okhttp3.RequestBody
     import okhttp3.RequestBody.Companion.toRequestBody
     import okhttp3.ResponseBody
+    import java.lang.reflect.Type
 
     class MySerializer : Serializer {
         private val mediaType = "application/my-format".toMediaType()
 
         override val supportedMediaTypes: List<MediaType> = listOf(mediaType)
 
-        override fun <T> serialize(entity: T, type: Class<T>): RequestBody =
-            toBytes(entity).toRequestBody(mediaType)
+        override fun <T> serialize(entity: T, type: Type): RequestBody =
+            toBytes(entity, type).toRequestBody(mediaType)
 
-        override fun <T> serializeList(entities: Iterable<T>, type: Class<T>): RequestBody =
-            toBytes(entities).toRequestBody(mediaType)
-
-        override fun <T> deserialize(body: ResponseBody, type: Class<T>): T? =
+        override fun <T> deserialize(body: ResponseBody, type: Type): T? =
             fromBytes(body.bytes(), type)
-
-        override fun <T> deserializeList(body: ResponseBody, type: Class<T>): List<T>? =
-            fromBytesAsList(body.bytes(), type)
     }
     ```
+
+    The `type` is either a plain `Class` or a generic type such as `List<Contact>` (a `ParameterizedType`). Lists of entities are passed as `List<T>`, so you do not need to override `serializeList()` and `deserializeList()`.
 
 === "TypeScript"
 

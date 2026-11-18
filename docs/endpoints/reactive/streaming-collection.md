@@ -65,7 +65,7 @@ Extends [Collection endpoint](../generic/collection.md)
 === "Kotlin"
 
     ```kotlin
-    val messages = StreamingCollectionEndpointImpl(client, "messages", Message::class.java)
+    val messages = StreamingCollectionEndpointImpl<Message>(client, "messages")
 
     // Subscribe to new messages
     val stream = messages.getObservable()
@@ -79,7 +79,7 @@ Extends [Collection endpoint](../generic/collection.md)
     You can also use `GenericStreamingCollectionEndpointImpl` to use a custom type derived from `ElementEndpoint` for [elements](../generic/element.md).
 
     ```kotlin
-    val messages = GenericStreamingCollectionEndpointImpl(client, "messages", Message::class.java, ::MessageEndpoint)
+    val messages = GenericStreamingCollectionEndpointImpl<Message, MessageEndpoint>(client, "messages", ::MessageEndpoint)
     ```
 
 === "TypeScript"

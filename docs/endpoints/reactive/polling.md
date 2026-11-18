@@ -55,7 +55,7 @@ Extends [Element endpoint](../generic/element.md)
 === "Kotlin"
 
     ```kotlin
-    val status = PollingEndpointImpl(client, "status", Status::class.java)
+    val status = PollingEndpointImpl<Status>(client, "status")
         .apply { pollingInterval = Duration.ofSeconds(5) }
 
     // Poll for state changes
@@ -104,7 +104,7 @@ Pass an end condition to the constructor to stop polling once the entity reaches
 === "Kotlin"
 
     ```kotlin
-    val job = PollingEndpointImpl(client, "jobs/42", Job::class.java) { it.state == "completed" }
+    val job = PollingEndpointImpl<Job>(client, "jobs/42") { it.state == "completed" }
     ```
 
 === "TypeScript"

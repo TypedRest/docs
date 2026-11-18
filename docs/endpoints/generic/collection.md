@@ -102,7 +102,7 @@ Extends [Indexer endpoint](indexer.md)
 === "Kotlin"
 
     ```kotlin
-    val contacts = CollectionEndpointImpl(client, "contacts", Contact::class.java)
+    val contacts = CollectionEndpointImpl<Contact>(client, "contacts")
 
     // Read all entities in the collection
     val allContacts = contacts.readAll()
@@ -132,7 +132,7 @@ Extends [Indexer endpoint](indexer.md)
     You can also use `GenericCollectionEndpointImpl` to use a custom type derived from `ElementEndpoint` for [elements](element.md).
 
     ```kotlin
-    val contacts = GenericCollectionEndpointImpl(client, "contacts", Contact::class.java, ::ContactEndpoint)
+    val contacts = GenericCollectionEndpointImpl<Contact, ContactEndpoint>(client, "contacts", ::ContactEndpoint)
 
     // Create a new entity
     val newContact: ContactEndpoint = contacts.create(Contact("John Doe"))

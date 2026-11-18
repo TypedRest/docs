@@ -33,7 +33,7 @@ The constructor of the entry endpoint requires you to specify the APIs root URL.
     val client = EntryEndpoint(URI.create("http://example.com/api/"))
 
     // Create child endpoint
-    val contacts = CollectionEndpointImpl(client, "contacts", Contact::class.java)
+    val contacts = CollectionEndpointImpl<Contact>(client, "contacts")
     ```
 
 === "TypeScript"

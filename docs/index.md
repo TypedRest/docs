@@ -77,7 +77,7 @@ A few lines are enough to describe an API with a collection of contacts plus a "
     class ContactEndpoint(referrer: Endpoint, relativeUri: URI) :
       ElementEndpointImpl<Contact>(referrer, relativeUri, Contact::class.java) {
       val note: ElementEndpoint<Note>
-        get() = ElementEndpointImpl(this, "./note", Note::class.java)
+        get() = ElementEndpointImpl<Note>(this, "./note")
     }
     ```
 

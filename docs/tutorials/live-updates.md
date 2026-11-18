@@ -46,7 +46,7 @@ The server needs nothing special for this. A [polling endpoint](../endpoints/rea
 === "Kotlin"
 
     ```kotlin
-    val job = PollingEndpointImpl(client, "./imports/42", ImportJob::class.java) { it.state == "completed" }
+    val job = PollingEndpointImpl<ImportJob>(client, "./imports/42") { it.state == "completed" }
         .apply { pollingInterval = Duration.ofSeconds(2) }
 
     job.getObservable()
@@ -95,7 +95,7 @@ Say the API keeps a log of every change to the address book at `/contacts/change
 === "Kotlin"
 
     ```kotlin
-    val changes = StreamingCollectionEndpointImpl(client, "./contacts/changes", ContactChange::class.java)
+    val changes = StreamingCollectionEndpointImpl<ContactChange>(client, "./contacts/changes")
 
     // Start with the last 10 entries, then follow new ones
     val subscription = changes.getObservable(-10)
@@ -159,7 +159,7 @@ An [SSE endpoint](../endpoints/reactive/sse.md) deserializes the `data` of each 
 === "Kotlin"
 
     ```kotlin
-    val events = SseStreamingEndpointImpl(client, "./contacts/1337/events", ContactEvent::class.java)
+    val events = SseStreamingEndpointImpl<ContactEvent>(client, "./contacts/1337/events")
 
     val subscription = events.getObservable()
         .subscribe { println("${it.type}: ${it.contact?.name}") }

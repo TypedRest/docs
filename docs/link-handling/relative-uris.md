@@ -24,7 +24,7 @@ The most straightforward way to navigate between endpoints is using hard-coded r
 
     ```kotlin
     val client = EntryEndpoint(URI.create("http://example.com/api/"))
-    val contacts = CollectionEndpointImpl(client, "contacts", Contact::class.java)
+    val contacts = CollectionEndpointImpl<Contact>(client, "contacts")
     // Results in: http://example.com/api/contacts
     ```
 
@@ -79,7 +79,7 @@ This is often not the desired behavior. TypedRest provides a non-standard `./` p
 === "Kotlin"
 
     ```kotlin
-    val parent = ElementEndpointImpl(client, "endpoint", MyEntity::class.java)
+    val parent = ElementEndpointImpl<MyEntity>(client, "endpoint")
     // parent.uri = http://example.com/endpoint
 
     // Without ./ prefix - replaces last segment

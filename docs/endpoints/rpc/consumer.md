@@ -29,7 +29,7 @@ RPC endpoint that takes an entity as input when invoked.
 === "Kotlin"
 
     ```kotlin
-    val logger = ConsumerEndpointImpl(client, "log", LogEntry::class.java)
+    val logger = ConsumerEndpointImpl<LogEntry>(client, "log")
 
     // Invoke with input
     logger.invoke(LogEntry("Hello, world!", "Info"))

@@ -86,7 +86,7 @@ Most of what an endpoint does comes from TypedRest and is tested there. What is 
     val server = MockWebServer()
 
     val client = EntryEndpoint(server.url("/").toUri())
-    val endpoint = ElementEndpointImpl(client, "contacts/1", Contact::class.java)
+    val endpoint = ElementEndpointImpl<Contact>(client, "contacts/1")
 
     server.enqueue(MockResponse()
         .setBody("""{"name":"Smith"}""")

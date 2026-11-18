@@ -38,7 +38,7 @@ Unlike the SSE endpoint, this has no event types, event IDs or automatic reconne
 === "Kotlin"
 
     ```kotlin
-    val events = StreamingEndpointImpl(client, "events", Event::class.java)
+    val events = StreamingEndpointImpl<Event>(client, "events")
 
     // Subscribe to the stream
     val stream = events.getObservable()

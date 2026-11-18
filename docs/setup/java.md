@@ -73,7 +73,7 @@ Extend `EntryEndpoint` and expose your API's resources as methods or properties:
 
     class MyClient(uri: URI) : EntryEndpoint(uri) {
         val contacts: CollectionEndpoint<Contact>
-            get() = CollectionEndpointImpl(this, "./contacts", Contact::class.java)
+            get() = CollectionEndpointImpl<Contact>(this, "./contacts")
     }
     ```
 
