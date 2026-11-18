@@ -141,8 +141,6 @@ Often the right reaction to a conflict is simply to start over: read the current
     await client.Contacts["1337"].UpdateAsync(contact => contact.Name = "Smith");
     ```
 
-    There are overloads taking a `Func<Contact, Contact>` and a maximum number of retries. If the server sends a `Retry-After` header with the `412`, TypedRest waits that long before retrying.
-
 === "Java"
 
     ```java
@@ -152,15 +150,11 @@ Often the right reaction to a conflict is simply to start over: read the current
     }, 3);
     ```
 
-    If the server sends a `Retry-After` header with the `412`, TypedRest waits that long before retrying.
-
 === "Kotlin"
 
     ```kotlin
     client.contacts["1337"].update({ it.copy(name = "Smith") })
     ```
-
-    If the server sends a `Retry-After` header with the `412`, TypedRest waits that long before retrying.
 
 === "TypeScript"
 
@@ -168,7 +162,7 @@ Often the right reaction to a conflict is simply to start over: read the current
     await client.contacts.get("1337").update(contact => { contact.name = "Smith"; });
     ```
 
-    TypedRest for TypeScript retries immediately, without waiting for a `Retry-After` delay.
+If the server sends a `Retry-After` header with the `412`, TypedRest waits that long before retrying.
 
 The change you pass in may run more than once, so it must only depend on the entity it receives, not on state that changes between calls.
 
